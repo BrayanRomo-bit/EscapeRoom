@@ -104,7 +104,35 @@ namespace EscapeRoom
 
         private void btnCargarPartida_Click_1(object sender, EventArgs e)
         {
-            IniciarJuego();
+            
+                if (!File.Exists("guardado.json"))
+                {
+                    MessageBox.Show("No hay partida guardada.");
+                    return;
+                }
+                else
+                {
+                    string json = File.ReadAllText("guardado.json");
+                    Guardado guardado = JsonSerializer.Deserialize<Guardado>(json);
+                    Prisionero datosGuardados = guardado.Prisionero;
+    
+                    IniciarJuego();
+                    nivel1 = new Nivel1();
+                    PanelJuego.Controls.Add(nivel1);
+                    nivel1.IniciarNivel();
+    
+                    Prisionero prisioneroActual = nivel1.Prisioneros[0];
+    
+                    prisioneroActual.X = datosGuardados.X;
+                    prisioneroActual.Y = datosGuardados.Y;
+                    prisioneroActual.Inventario = datosGuardados.Inventario;
+    
+                    prisioneroActual.Imagen.Location = new Point(prisioneroActual.X, prisioneroActual.Y);
+    
+                    btnPausaJuego.Visible = true;
+                    btnPausaJuego.BringToFront();
+            }
+
         }
 
 

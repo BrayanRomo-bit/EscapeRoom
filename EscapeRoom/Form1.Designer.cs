@@ -37,11 +37,11 @@
             btnSalir = new Button();
             BtnNuevaPartida = new Button();
             PanelMenuJuego = new Panel();
+            btnReanudar = new Button();
             btnInventario = new Button();
             btncargar = new Button();
             btnSaliraMenu = new Button();
             btnGuadarPartida = new Button();
-            btnReanudar = new Button();
             PanelJuego.SuspendLayout();
             PanelMenuPrincipal.SuspendLayout();
             PanelMenuJuego.SuspendLayout();
@@ -129,6 +129,16 @@
             PanelMenuJuego.TabIndex = 6;
             PanelMenuJuego.Visible = false;
             // 
+            // btnReanudar
+            // 
+            btnReanudar.Location = new Point(76, 86);
+            btnReanudar.Name = "btnReanudar";
+            btnReanudar.Size = new Size(215, 35);
+            btnReanudar.TabIndex = 4;
+            btnReanudar.Text = "Reanudar";
+            btnReanudar.UseVisualStyleBackColor = true;
+            btnReanudar.Click += btnReanudar_Click;
+            // 
             // btnInventario
             // 
             btnInventario.Location = new Point(76, 216);
@@ -169,16 +179,6 @@
             btnGuadarPartida.UseVisualStyleBackColor = true;
             btnGuadarPartida.Click += btnGuadarPartida_Click;
             // 
-            // btnReanudar
-            // 
-            btnReanudar.Location = new Point(76, 86);
-            btnReanudar.Name = "btnReanudar";
-            btnReanudar.Size = new Size(215, 35);
-            btnReanudar.TabIndex = 4;
-            btnReanudar.Text = "Reanudar";
-            btnReanudar.UseVisualStyleBackColor = true;
-            btnReanudar.Click += btnReanudar_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(11F, 25F);
@@ -186,8 +186,8 @@
             BackColor = SystemColors.ActiveCaptionText;
             ClientSize = new Size(984, 761);
             Controls.Add(PanelMenuJuego);
-            Controls.Add(PanelJuego);
             Controls.Add(PanelMenuPrincipal);
+            Controls.Add(PanelJuego);
             Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ForeColor = SystemColors.ActiveCaptionText;
             KeyPreview = true;
