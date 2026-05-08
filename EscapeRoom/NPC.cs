@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace EscapeRoom
 {
-    public class NPC: PictureBox
+    public class NPC : PictureBox
     {
         public int Id { get; set; }
         public string Dialogo { get; set; }
-        public bool YaHablo { get; set; } 
+        public bool YaHablo { get; set; }
 
         public NPC(int id, string dialogo, Image imagen, Point posicion)
         {
@@ -21,7 +21,17 @@ namespace EscapeRoom
             this.Size = new Size(50, 50);
             this.SizeMode = PictureBoxSizeMode.StretchImage;
             this.YaHablo = false;
-            this.BackColor= Color.Transparent;
+            this.BackColor = Color.Transparent;
         }
+        public string Hablar(NivelBase nivel)
+        {
+            if (YaHablo) return "Ya te he dicho todo lo que sé.";
+            YaHablo = true;
+            nivel.LabelDialogo.Text = Dialogo;
+            nivel.LabelDialogo.Show();
+            return Dialogo;
+        }
+
+
     }
 }

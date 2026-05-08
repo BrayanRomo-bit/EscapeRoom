@@ -33,7 +33,7 @@ namespace EscapeRoom
         public List<Llave> Llaves { get { return listaLlaves; } }
         public List<Puerta> Puertas { get { return listaPuertas; } }
         public Label LabelDialogo { get { return lblDialogo; } }
-
+        public bool NivelSuperado { get; set; } = false;
 
         protected Dictionary<int, string> baseDeDialogos = new Dictionary<int, string>();
         protected Dictionary<int, string> baseDeLLaves = new Dictionary<int, string>();
@@ -69,6 +69,7 @@ namespace EscapeRoom
                             contadorPuertasMapa++;
                             break;
                         case 'G': CrearGuardia(x, y); break;
+                        case 'V': PasarRonda(x, y); break;
                     }
                 }
             }
@@ -88,6 +89,22 @@ namespace EscapeRoom
             pbGuardia.BringToFront();
         }
 
+        protected void PasarRonda(int x, int y)
+        {
+            PictureBox pbRonda = new PictureBox();
+            pbRonda.Image = Properties.Resources.pizo;
+            pbRonda.SizeMode = PictureBoxSizeMode.Zoom;
+            pbRonda.Size = new Size(50, 50);
+            pbRonda.Location = new Point(x * 50, y * 50);
+            this.Controls.Add(pbRonda);
+            pbRonda.BringToFront();
+            
+            if (prisionero != null && prisionero.X == x * 50 && prisionero.Y == y * 50)
+            {
+                NivelSuperado = true;
+            }
+            listaPuertas.Add(new Puerta(x * 50, y * 50, "Ronda", "¡Has pasado a la siguiente ronda!", pbRonda));
+        }
         protected void CrearLLave(int x, int y, int Idobject)
         {
             PictureBox pbllave = new PictureBox();
@@ -194,12 +211,23 @@ namespace EscapeRoom
             this.Controls.Add(Npc);
             contadorNPCs++;
         }
-
+       
         public void ActualizarNivel(bool arr, bool abj, bool izq, bool der, bool accion, int ancho, int alto)
         {
             if (prisionero != null)
             {
-                prisionero.Actualizar(arr, abj, izq, der, accion, this);
+                string mensaje = prisionero.Actualizar(arr, abj, izq, der, accion, this);
+
+                if (mensaje != "")
+                {
+                    lblDialogo.Text = mensaje;
+                    lblDialogo.Show();
+                }
+                else if (prisionero.EstaLeyendo == false && prisionero.Atrapado == false)
+                {
+                    lblDialogo.Hide();
+                }
+
                 prisionero.Imagen.Location = new Point(prisionero.X, prisionero.Y);
             }
             foreach (var guardia in listaGuardias)
@@ -221,7 +249,7 @@ namespace EscapeRoom
 
 
 
-        public void IniciarNivel()
+        public virtual void IniciarNivel()
         {
         }
         public void ReiniciarNivel()
@@ -244,8 +272,8 @@ namespace EscapeRoom
             IniciarNivel();
         }
 
-      
-     
+
+
 
         private void InitializeComponent()
         {

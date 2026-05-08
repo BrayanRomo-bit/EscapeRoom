@@ -21,7 +21,7 @@ namespace EscapeRoom
             InitializeComponent();
         }
 
-        public void IniciarNivel()
+        public override void IniciarNivel()
         {
             lblDialogo = new Label();
             lblDialogo.BackColor = Color.Black;
@@ -50,8 +50,8 @@ namespace EscapeRoom
                 "PN.P...P.N.P.......x",
                 "P..P...P...P.....G.x",
                 "xx.xx.xxSxxB.......x",
-                "xL......J..L.....G.x",
-                "xxxxxxxxxxxxxSxxxxxx"
+                "xL.......J..L......x",
+                "xxxxxxxxxxxxxxxxxVxx"
             };
 
             ConstruirMapa(mapa);

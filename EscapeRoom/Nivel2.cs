@@ -11,7 +11,7 @@ namespace EscapeRoom
         public Nivel2()
         {
         }
-        public void IniciarNivel()
+        public override void IniciarNivel()
         {
             lblDialogo = new Label();
             lblDialogo.BackColor = Color.Black;

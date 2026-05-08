@@ -18,9 +18,9 @@ namespace EscapeRoom
 
         public Prisionero(int x, int y, int velocidad, PictureBox imagen) : base(x, y, velocidad, imagen)
         {
-
+            Inventario = new List<Objeto>();
         }
-        public void Actualizar(bool arr, bool abj, bool izq, bool der, bool accion, NivelBase nivel)
+        public string Actualizar(bool arr, bool abj, bool izq, bool der, bool accion, NivelBase nivel)
         {
             bool estoyEnPuerta = false;
             bool estoyEnNPC = false;
@@ -52,8 +52,8 @@ namespace EscapeRoom
                 if (abj && futuroAbj.IntersectsWith(solido)) chocaAbj = true;
             }
 
-            if (accion == false)seguroSoltarTecla = true;
-            
+            if (accion == false) seguroSoltarTecla = true;
+
 
             if (Atrapado == true)
             {
@@ -62,33 +62,33 @@ namespace EscapeRoom
                     Atrapado = false;
                     nivel.ReiniciarNivel();
                 }
-                return;
+
+                return "";
             }
 
             if (EstaLeyendo == true)
             {
-                
+
                 if (accion == true && seguroSoltarTecla == true)
                 {
                     EstaLeyendo = false;
-                    nivel.LabelDialogo.Hide();
 
                     seguroSoltarTecla = false;
                 }
-                return;
+                return "";
             }
 
+            
             foreach (var npc in nivel.NPCs)
             {
-                if (areaInteraccion.IntersectsWith(npc.Bounds) && accion == true && seguroSoltarTecla == true)
+                if (areaInteraccion.IntersectsWith(npc.Bounds) && estoyEnNPC == false && accion == true && seguroSoltarTecla == true)
                 {
-                    nivel.LabelDialogo.Text = npc.Dialogo;
-                    nivel.LabelDialogo.Show();
+                    npc.Hablar(nivel);
                     estoyEnNPC = true;
-                    accion = false;
                     EstaLeyendo = true;
                     seguroSoltarTecla = false;
-                    return;
+                    return $"{npc.Dialogo}";
+
                 }
             }
 
@@ -112,24 +112,20 @@ namespace EscapeRoom
                     {
                         estoyEnPuerta = true;
                         puerta.EstaAbierta = true;
-                        nivel.LabelDialogo.Text = $"Has abierto la puerta con: Llave {llaveUsada.Descripcion}";
-                        nivel.LabelDialogo.Show();
                         puerta.Imagen.Bounds = Rectangle.Empty;
                         //Resources.puerta_abierta; // Cambia la imagen de la puerta a abierta
                         Inventario.Remove(llaveUsada);
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return;
+                        return $"Has abierto la puerta con: Llave {llaveUsada.Descripcion}";
                     }
 
                     else
                     {
                         estoyEnPuerta = true;
-                        nivel.LabelDialogo.Text = $"Necesitas: Llave{puerta.Descripcion} para abrir esta puerta.";
-                        nivel.LabelDialogo.Show();
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return;
+                        return $"Necesitas: Llave{puerta.Descripcion} para abrir esta puerta.";
                     }
                 }
             }
@@ -143,9 +139,6 @@ namespace EscapeRoom
                 {
                     if (accion == true)
                     {
-                        nivel.LabelDialogo.Text = $"Has recogido: Llave {llave.Descripcion}";
-                        nivel.LabelDialogo.Show();
-                        nivel.LabelDialogo.BringToFront();
 
                         Inventario.Add(llave);
                         llave.Recogido = true;
@@ -153,7 +146,7 @@ namespace EscapeRoom
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
 
-                        return;
+                        return $"Has recogido: Llave {llave.Descripcion}";
                     }
                 }
             }
@@ -163,13 +156,11 @@ namespace EscapeRoom
 
                 if (areaInteraccion.IntersectsWith(guardia.Imagen.Bounds))
                 {
-                    
-                        nivel.LabelDialogo.Text = guardia.Dialogo;
-                        nivel.LabelDialogo.Show();
-                        Atrapado = true;
-                        seguroSoltarTecla = false;
-                        return;
-                    
+
+                    Atrapado = true;
+                    seguroSoltarTecla = false;
+                    return $"Guardia: {guardia.Dialogo}";
+
                 }
             }
 
@@ -181,37 +172,19 @@ namespace EscapeRoom
             if (abj && chocaAbj == false && y + Imagen.Height < nivel.Height) y += velocidad;
 
             Imagen.Location = new Point(x, y);
-
+            return "";
         }
-
-        public string MostrarInventario(NivelBase nivel, bool accion)
+        public string ObtenerTextoInventario()
         {
-
-            if (accion == false) seguroSoltarTecla = true;
-            if (EstaLeyendo == true)
-            {
-                if (accion == true && seguroSoltarTecla == true)
-                {
-                    EstaLeyendo = false;
-                    nivel.LabelDialogo.Hide();
-
-                    seguroSoltarTecla = false;
-                }
-            }
-
             if (Inventario.Count == 0)
             {
-                nivel.LabelDialogo.Text = "Inventario vacío.";
-                EstaLeyendo = true;
+                return "Tu mochila está vacía.";
             }
-            else
-            {
-                nivel.LabelDialogo.Text = "Inventario:" + string.Join("\r\n ", Inventario.Select(i => i.Descripcion));
-                EstaLeyendo = true;
-            }
-            nivel.LabelDialogo.Show();
-            nivel.LabelDialogo.BringToFront();
-            return nivel.LabelDialogo.Text;
+
+            string contenido = "Llevas contigo:\n\n";
+            contenido += string.Join("\n- ", Inventario.Select(i => i.Descripcion));
+
+            return contenido;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace EscapeRoom
@@ -10,7 +11,7 @@ namespace EscapeRoom
     {
         protected int x;
         protected int y;
-        public PictureBox Imagen { get; set; }
+        [JsonIgnore] public PictureBox Imagen { get; set; }
         public int X
         {
             get { return x; }

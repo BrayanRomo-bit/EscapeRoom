@@ -8,7 +8,8 @@ namespace EscapeRoom
     public partial class Form1 : Form
     {
         bool movArriba, movAbajo, movIzquierda, movDerecha, accion, accionBloqueada;
-        Nivel1 nivel1;
+        NivelBase nivel;
+        Prisionero prisionero;
 
 
         public Form1()
@@ -51,13 +52,24 @@ namespace EscapeRoom
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (nivel1 == null) return; // o timer1.Enabled = false;
-            nivel1.ActualizarNivel(movArriba, movAbajo, movIzquierda, movDerecha, accion, PanelJuego.Width, PanelJuego.Height);
-
-            foreach (Guardia guardia in nivel1.Guardias)
+            if (nivel == null) return; // o timer1.Enabled = false;
+            nivel.ActualizarNivel(movArriba, movAbajo, movIzquierda, movDerecha, accion, PanelJuego.Width, PanelJuego.Height);
+            if (nivel.NivelSuperado== true)
             {
-                guardia.Actualizar(movArriba, movAbajo, movIzquierda, movDerecha, accion, nivel1);
+                timer1.Stop();
+                MessageBox.Show("¡Nivel superado! Pasando al siguiente nivel...");
+                PanelJuego.Controls.Clear();
+                nivel = new Nivel2();
+                PanelJuego.Controls.Add(nivel);
+                nivel.IniciarNivel();
+                timer1.Start();
             }
+
+            foreach (Guardia guardia in nivel.Guardias)
+            {
+                guardia.Actualizar(movArriba, movAbajo, movIzquierda, movDerecha, accion, nivel);
+            }
+
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -77,7 +89,11 @@ namespace EscapeRoom
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-
+            if (e.KeyCode == Keys.I)
+            {
+                PanelMenuJuego.Visible = true;
+                timer1.Stop();
+            }
             if (e.KeyCode == Keys.W || e.KeyCode == Keys.Up) movArriba = true;
             if (e.KeyCode == Keys.S || e.KeyCode == Keys.Down) movAbajo = true;
             if (e.KeyCode == Keys.A || e.KeyCode == Keys.Left) movIzquierda = true;
@@ -104,33 +120,33 @@ namespace EscapeRoom
 
         private void btnCargarPartida_Click_1(object sender, EventArgs e)
         {
-            
-                if (!File.Exists("guardado.json"))
-                {
-                    MessageBox.Show("No hay partida guardada.");
-                    return;
-                }
-                else
-                {
-                    string json = File.ReadAllText("guardado.json");
-                    Guardado guardado = JsonSerializer.Deserialize<Guardado>(json);
-                    Prisionero datosGuardados = guardado.Prisionero;
-    
-                    IniciarJuego();
-                    nivel1 = new Nivel1();
-                    PanelJuego.Controls.Add(nivel1);
-                    nivel1.IniciarNivel();
-    
-                    Prisionero prisioneroActual = nivel1.Prisioneros[0];
-    
-                    prisioneroActual.X = datosGuardados.X;
-                    prisioneroActual.Y = datosGuardados.Y;
-                    prisioneroActual.Inventario = datosGuardados.Inventario;
-    
-                    prisioneroActual.Imagen.Location = new Point(prisioneroActual.X, prisioneroActual.Y);
-    
-                    btnPausaJuego.Visible = true;
-                    btnPausaJuego.BringToFront();
+
+            if (!File.Exists("guardado.json"))
+            {
+                MessageBox.Show("No hay partida guardada.");
+                return;
+            }
+            else
+            {
+                string json = File.ReadAllText("guardado.json");
+                Guardado guardado = JsonSerializer.Deserialize<Guardado>(json);
+                Prisionero datosGuardados = guardado.Prisionero;
+
+                IniciarJuego();
+                nivel = new Nivel1();
+                PanelJuego.Controls.Add(nivel);
+                nivel.IniciarNivel();
+
+                Prisionero prisioneroActual = nivel.Prisioneros[0];
+
+                prisioneroActual.X = datosGuardados.X;
+                prisioneroActual.Y = datosGuardados.Y;
+                prisioneroActual.Inventario = datosGuardados.Inventario;
+
+                prisioneroActual.Imagen.Location = new Point(prisioneroActual.X, prisioneroActual.Y);
+
+                btnPausaJuego.Visible = true;
+                btnPausaJuego.BringToFront();
             }
 
         }
@@ -139,9 +155,9 @@ namespace EscapeRoom
         private void BtnNuevaPartida_Click(object sender, EventArgs e)
         {
             IniciarJuego();
-            nivel1 = new Nivel1();
-            PanelJuego.Controls.Add(nivel1);
-            nivel1.IniciarNivel();
+            nivel = new Nivel1();
+            PanelJuego.Controls.Add(nivel);
+            nivel.IniciarNivel();
             btnPausaJuego.Visible = true;
             btnPausaJuego.BringToFront();
         }
@@ -176,15 +192,17 @@ namespace EscapeRoom
         private void btnGuadarPartida_Click(object sender, EventArgs e)
         {
 
-            if (nivel1.Prisioneros == null || nivel1.Prisioneros.Count == 0)
+            if (nivel.Prisioneros == null || nivel.Prisioneros.Count == 0)
                 return;
 
-            Prisionero prisionero = nivel1.Prisioneros[0];
+            Prisionero prisionero = nivel.Prisioneros[0];
             int NivelActual;
             Guardado guardado = new Guardado
             {
                 Prisionero = prisionero,
-                NivelActual = 1
+                NivelActual = 1,
+                ObjetosRecogidos = prisionero.Inventario,
+
             };
             string json = JsonSerializer.Serialize(guardado);
             File.WriteAllText("guardado.json", json);
@@ -198,7 +216,7 @@ namespace EscapeRoom
                 MessageBox.Show("No hay partida guardada.");
                 return;
             }
-            else if (nivel1.Prisioneros == null || nivel1.Prisioneros.Count == 0)
+            else if (nivel.Prisioneros == null || nivel.Prisioneros.Count == 0)
             {
                 MessageBox.Show("No hay prisionero en el nivel para cargar la partida.");
                 return;
@@ -210,7 +228,7 @@ namespace EscapeRoom
                 Prisionero datosGuardados = guardado.Prisionero;
 
                 // 2. Tomamos al Goku que ya está vivo en el nivel
-                Prisionero prisioneroActual = nivel1.Prisioneros[0];
+                Prisionero prisioneroActual = nivel.Prisioneros[0];
 
                 // 3. ¡Hacemos el transplante de datos!
                 prisioneroActual.X = datosGuardados.X;
@@ -226,11 +244,26 @@ namespace EscapeRoom
 
         private void btnInventario_Click(object sender, EventArgs e)
         {
+            // 1. Programación Defensiva: Nos aseguramos de que haya una partida activa
+            if (nivel == null || nivel.Prisioneros.Count == 0)
+            {
+                MessageBox.Show("Aún no hay ningún prisionero en el nivel.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Encontramos a Goku
+            Prisionero goku = nivel.Prisioneros[0];
+
+            // 3. Le pedimos a Goku que nos dicte qué trae en la mochila
+            string textoMochila = goku.ObtenerTextoInventario();
+
+            // 4. Mostramos el resultado en una ventana emergente limpia y nativa de Windows
+            MessageBox.Show(textoMochila, "Inventario", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnReanudar_Click(object sender, EventArgs e)
         {
-            
+
             PanelMenuJuego.Visible = false;
 
             timer1.Start();
