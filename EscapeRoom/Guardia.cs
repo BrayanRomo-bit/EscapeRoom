@@ -15,7 +15,7 @@ namespace EscapeRoom
         {
             this.Dialogo = dialogo;
         }
-
+    ///hola
         public void Actualizar(bool arr, bool abj, bool izq, bool der, bool accion, NivelBase nivel)
         {
             List<Rectangle> objetosSolidos = new List<Rectangle>();
