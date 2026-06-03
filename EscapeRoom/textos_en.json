@@ -1,0 +1,350 @@
+{
+  "proyecto": "EscapeRoom",
+  "idioma": "en",
+
+  "formularios": {
+    "Form1": {
+      "titulo_ventana": "Escape Room"
+    }
+  },
+
+  "pantallas": {
+    "UCPantallaMenu": {
+      "descripcion": "Main menu screen",
+      "botones": {
+        "BtnNuevaPartida": "New Game",
+        "btnCargarPartida": "Load Game",
+        "btnSalir": "Exit Game",
+        "btnConfirmarCarga": "Confirm",
+        "btnAceptarNombr": "OK"
+      },
+      "controles": {
+        "txtNombreUsuario": "(player name text box)",
+        "partidascargadas": "(saved games dropdown)",
+        "listBox1": "(saved games list)"
+      },
+      "paneles": {
+        "panelnombre": "Enter your name panel",
+        "panelcargar": "Load game panel"
+      },
+      "messageboxes": {
+        "carpeta_vacia": "The folder exists, but there are no saved games inside.",
+        "carpeta_no_encontrada": "Saved games folder not found. Play a new game to create it!",
+        "nombre_vacio": "Please enter a name for your prisoner.",
+        "selecciona_partida": "Please select a game from the list."
+      }
+    },
+
+    "UCPantallaJuego": {
+      "descripcion": "In-game screen with pause menu",
+      "botones": {
+        "btnPausaJuego": "Pause",
+        "btnReanudar": "Resume",
+        "btnGuadarPartida": "Save Game",
+        "btncargar": "Load Game",
+        "btnInventario": "Show Inventory",
+        "btnSaliraMenu": "Exit"
+      },
+      "messageboxes": {
+        "juego_guardado": "Game saved successfully as: {0}",
+        "guardado_no_encontrado": "Save file not found. You may not have saved yet.",
+        "nivel_no_iniciado": "You must start the level before loading your position.",
+        "punto_de_control_cargado": "Checkpoint loaded!",
+        "titulo_inventario": "Inventory",
+        "nivel_superado": "Level complete!",
+        "todos_niveles_superados": "You have completed all levels!",
+        "error_al_cargar": "There was an error loading the file. Returning to menu.",
+        "escape_exitoso": "You have escaped from prison! You win."
+      }
+    }
+  },
+
+  "niveles": {
+    "Nivel1": {
+      "nombre": "Level 1 - The Cell Block",
+      "controles": {
+        "labels": {
+          "lblDialogo": {
+            "texto": "(dynamic dialogue at runtime)",
+            "descripcion": "Bottom dialogue label — shown when interacting with NPCs or objects"
+          },
+          "lbltexto": {
+            "texto": "(dynamic long dialogue text)",
+            "descripcion": "Main dialogue text label — displays extended text at the bottom of the screen"
+          }
+        },
+        "pictureBoxes": {
+          "pbCama": "Bed 1 (main cell — contains hidden key)",
+          "pbCama2": "Bed 2 (upper left cell)",
+          "pbCama3": "Bed 3 (lower left cell)",
+          "pbCama4": "Bed 4 (lower right cell)",
+          "pbcofre": "Chest 1 (contains note with code hint)",
+          "pbcofre2": "Chest 2 (contains note with code hint)",
+          "pbcofre3": "Chest 3 (contains note with code hint)",
+          "pbpuerta1": "Cell Door 1",
+          "pbPuerta2": "Cell Door 2",
+          "pbpuerta3": "Cell Door 3",
+          "pbpuerta4": "Cell Door 4",
+          "pbSalida": "Main Exit Door (requires code)"
+        }
+      },
+      "npcs": {
+        "jhon": {
+          "nombre": "Jhon",
+          "dialogos": [
+            "Jhon: Psst... Mario, come here quick.",
+            "Jhon: The others hid wooden keys and codes in their cells to escape.",
+            "Jhon: Everyone's in the yard right now. This is your only chance!",
+            "Jhon: Take my key... and hurry before the guards spot you!"
+          ],
+          "objeto_que_da": "Jhon's cell key"
+        }
+      },
+      "llaves": {
+        "llave": {
+          "id": "llave",
+          "descripcion": "Jhon's cell key"
+        },
+        "llave2": {
+          "id": "llave2",
+          "descripcion": "Cell 2 key"
+        },
+        "llave3": {
+          "id": "llave3",
+          "descripcion": "Cell 3 key"
+        },
+        "llave4": {
+          "id": "llave4",
+          "descripcion": "Cell 4 key"
+        }
+      },
+      "puertas": {
+        "puerta1": {
+          "llave_requerida": "llave",
+          "descripcion": " of cell 1"
+        },
+        "puerta2": {
+          "llave_requerida": "llave2",
+          "descripcion": " of cell 2"
+        },
+        "puerta3": {
+          "llave_requerida": "llave3",
+          "descripcion": " of cell 3"
+        },
+        "puerta4": {
+          "llave_requerida": "llave4",
+          "descripcion": " of cell 4"
+        },
+        "salida": {
+          "llave_requerida": "llave3",
+          "descripcion": "Cell door",
+          "requiere_codigo": true,
+          "es_salida_final": true,
+          "nota": "The code is randomly generated each playthrough (3 digits)"
+        }
+      },
+      "pistas_codigo": {
+        "nota1": "Crumpled note: The 1st number is {0}",
+        "nota2": "Crumpled note: The 2nd number is {0}",
+        "nota3": "Crumpled note: The 3rd number is {0}"
+      },
+      "escondites": {
+        "cama": "the Bed",
+        "cofre": "the Chest"
+      }
+    },
+
+    "Nivel2": {
+      "nombre": "Level 2 - The Security Room",
+      "controles": {
+        "pictureBoxes": {
+          "pbMonitores": "Security monitors (camera panel — requires code to disable)",
+          "pbcamara1": "Security camera 1",
+          "pbcamara2": "Security camera 2",
+          "pbBasura1": "Trash can (contains Security Room key)",
+          "pbescritorio": "Desk (contains cell key + blueprints of the guarded room)",
+          "pbcama1": "Bed 1 (lower left cell — contains key)",
+          "pbCama2": "Bed 2 (lower center cell — contains key)",
+          "pbcofre1": "Chest 1 (may contain camera code hint)",
+          "pbcofre2": "Chest 2 (may contain camera code hint)",
+          "pbcofre3": "Chest 3 (may contain camera code hint)",
+          "pbcofre4": "Exit chest (contains Main Exit key)",
+          "pbpuerta1": "Cell Door 1",
+          "pbpuerta2": "Cell Door 2",
+          "pbpuerta3": "Cell Door 3",
+          "pbpuerta4": "Camera Room Door",
+          "pbsalida": "Main Exit"
+        }
+      },
+      "llaves": {
+        "llave1": {
+          "id": "llave1",
+          "descripcion": "of a cell"
+        },
+        "llave2": {
+          "id": "llave2",
+          "descripcion": "of a cell"
+        },
+        "llave3": {
+          "id": "llave3",
+          "descripcion": "of a cell"
+        },
+        "llave4": {
+          "id": "llave4",
+          "descripcion": "of the Security Room.\n\n[Attached crumpled note: 'The transfer truck will arrive at {0}'].\nMario considers hijacking that truck to escape."
+        },
+        "llaveSalida": {
+          "id": "llaveSalida",
+          "descripcion": "of the Main Exit"
+        }
+      },
+      "puertas": {
+        "puerta1": {
+          "llave_requerida": "llave1",
+          "descripcion": " Cell Door 1"
+        },
+        "puerta2": {
+          "llave_requerida": "llave2",
+          "descripcion": " Cell Door 2"
+        },
+        "puerta3": {
+          "llave_requerida": "llave3",
+          "descripcion": " Cell Door 3"
+        },
+        "puerta4": {
+          "llave_requerida": "llave4",
+          "descripcion": " of the Camera Room"
+        },
+        "salida": {
+          "llave_requerida": "llaveSalida",
+          "descripcion": "Exit",
+          "es_salida_final": true
+        }
+      },
+      "pistas_camaras": {
+        "pistacam": "USB File: the 1st camera code number is {0}",
+        "pistacam2": "USB File: the 2nd camera code number is {0}",
+        "pistacam3": "USB File: the 3rd camera code number is {0}"
+      },
+      "escondites": {
+        "bote_basura": "the Trash Can",
+        "cofre_salida": "the Exit Chest",
+        "escritorio": "the Desk",
+        "cama": "the Bed",
+        "cofre": "the Chest"
+      },
+      "dialogo_planos": "[Mario examines some blueprints on the desk. He discovers that the exit key is restricted and heavily hidden in a room watched by a security camera]."
+    },
+
+    "Nivel3": {
+      "nombre": "Level 3 - The Bus Escape",
+      "controles": {
+        "pictureBoxes": {
+          "pbautobus": "Prison transfer bus (final escape objective)"
+        }
+      },
+      "npcs": {
+        "miAutobus": {
+          "nombre": "Prison Bus",
+          "tipo": "Autobus",
+          "id": 99,
+          "dialogos": [
+            "Mario: Hey you, get out! (Sounds of an intense struggle...)",
+            "Mario: Take this! (The driver falls unconscious)."
+          ]
+        }
+      }
+    }
+  },
+
+  "mensajes_juego": {
+    "prisionero": {
+      "atrapado": "You've been caught! Press the action key (E) to restart.",
+      "objeto_recibido": "\n\n[You received: {0}]",
+      "escondite_ya_revisado": "You already searched {0} and there's nothing more here.",
+      "escondite_encontro_algo": "You search {0} and find something! You receive: {1}",
+      "escondite_vacio": "You search {0}... but there's only dust and cobwebs.",
+      "cofre_ya_revisado": "You already searched {0} and there's nothing more here.",
+      "cofre_encontro_algo": "You open {0} and find something! You receive: {1}",
+      "cofre_vacio": "You open {0}... but there's only dust and cobwebs.",
+      "puerta_final_abierta": "You opened the final door with: Key {0}! Congratulations, you've escaped!",
+      "puerta_abierta": "You opened the door with: Key {0}",
+      "puerta_necesita_llave": "You need: Key {0} to open this door.",
+      "llave_recogida": "You picked up: Key {0}",
+      "dialogo_guardia": "Guard: {0}",
+      "camara_detectada": "A security camera has spotted you!",
+      "monitor_ya_desactivado": "The monitor shows a blurry image... looks like you already disabled it.",
+      "inventario_vacio": "Your backpack is empty.",
+      "inventario_encabezado": "You are carrying:\n\n"
+    },
+    "terminal_seguridad": {
+      "puerta_pin_prompt": "The door has an electronic keypad. Enter the 3-digit PIN:",
+      "puerta_pin_titulo": "Security Lock",
+      "puerta_codigo_aceptado": "BEEP! Code accepted. The door has been opened.",
+      "puerta_codigo_incorrecto": "ERROR! Incorrect code. Search the cells for clues.",
+      "camara_pin_prompt": "Security Terminal Locked.\nEnter the 3-digit PIN to shut down the cameras:",
+      "camara_pin_titulo": "Camera Monitor",
+      "camara_codigo_aceptado": "BEEP! Code accepted. Cameras have been disabled.",
+      "camara_codigo_incorrecto": "ERROR! Incorrect code. Search the cells for clues."
+    }
+  },
+
+  "clases": {
+    "Guardia": {
+      "descripcion": "Guard character that patrols left to right",
+      "dialogo_al_atrapar": "Freeze!"
+    },
+    "NPC": {
+      "descripcion": "Non-player character that the prisoner can interact with",
+      "metodo_hablar": "Returns the NPC's current dialogue line and advances to the next page"
+    },
+    "Autobus": {
+      "descripcion": "Special NPC — prison transfer bus the player must hijack to escape in Level 3"
+    },
+    "Guardar": {
+      "descripcion": "Static class for saving and loading game sessions in JSON format",
+      "carpeta_partidas": "Saved Games"
+    },
+    "EstadoJuego": {
+      "descripcion": "Data model representing the serializable state of a saved game",
+      "campos": {
+        "NombrePrisionero": "Player / prisoner name",
+        "PrisioneroX": "Prisoner's X position on the map",
+        "PrisioneroY": "Prisoner's Y position on the map",
+        "NivelActual": "Current level number",
+        "idioma": "Selected game language",
+        "Dificultad": "Selected difficulty level",
+        "CodigoPuertaFinal": "3-digit code for the level's exit door",
+        "InventarioPrisionero": "List of items the player is carrying",
+        "IdsLlavesRecogidas": "IDs of keys already picked up",
+        "IdsPuertasAbiertas": "IDs of doors already opened"
+      }
+    },
+    "Puerta": {
+      "descripcion": "Object that blocks passage until correct key or code is used",
+      "campos": {
+        "Id": "Unique identifier (must match key ID)",
+        "Descripcion": "Text shown when trying to open without correct key",
+        "RequiereCodigo": "Indicates if door requires PIN instead of a key",
+        "EsSalidaFinal": "Indicates if opening this door finishes the level",
+        "Codigo": "Required 3-digit PIN (only if RequiereCodigo is true)",
+        "EstaAbierta": "Current door state"
+      }
+    },
+    "Llave": {
+      "descripcion": "Collectible item that opens specific doors. Inherits from Object.",
+      "campos": {
+        "Id": "Unique identifier that must match target door ID",
+        "Descripcion": "Text shown when picking up or using key"
+      }
+    },
+    "Objeto": {
+      "descripcion": "Base class for all player inventory items",
+      "campos": {
+        "Id": "Unique item identifier",
+        "Descripcion": "Descriptive text shown to the player",
+        "Recogido": "Indicates if item has been taken from hideout"
+      }
+    }
+  }
+}

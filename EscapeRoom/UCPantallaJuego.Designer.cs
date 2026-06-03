@@ -55,6 +55,7 @@
             PanelMenuJuego.Size = new Size(367, 341);
             PanelMenuJuego.TabIndex = 7;
             PanelMenuJuego.Visible = false;
+            PanelMenuJuego.Paint += PanelMenuJuego_Paint;
             // 
             // btnReanudar
             // 
@@ -108,7 +109,7 @@
             // 
             // btnPausaJuego
             // 
-            btnPausaJuego.Location = new Point(722, 3);
+            btnPausaJuego.Location = new Point(677, 43);
             btnPausaJuego.Name = "btnPausaJuego";
             btnPausaJuego.Size = new Size(75, 34);
             btnPausaJuego.TabIndex = 8;

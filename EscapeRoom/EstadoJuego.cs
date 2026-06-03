@@ -16,9 +16,9 @@ namespace EscapeRoom
         public int PrisioneroY { get; set; }
         public int NivelActual { get; set; }
         public string idioma { get; set; }
-        public string CodigoSecretoFInal { get; set; }
         public int Dificultad { get; set; }
-         public List<string> InventarioPrisionero { get; set; }
+        public string CodigoPuertaFinal { get; set; }
+        public List<Objeto> InventarioPrisionero { get; set; }
         public List<string> IdsLlavesRecogidas { get; set; }
         public List<string> IdsPuertasAbiertas { get; set; }
     }

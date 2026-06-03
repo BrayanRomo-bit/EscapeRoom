@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace EscapeRoom
 {
@@ -14,9 +15,11 @@ namespace EscapeRoom
         public List<Objeto> Inventario { get; set; }
         public bool Atrapado { get; set; } = false;
         public bool EstaLeyendo { get; set; } = false;
+
         public bool seguroSoltarTecla = false;
         public string Nombre { get; set; }
 
+        public NPC NPCconversando = null;
 
         public Prisionero(int x, int y, int velocidad, PictureBox imagen) : base(x, y, velocidad, imagen)
         {
@@ -41,9 +44,9 @@ namespace EscapeRoom
             foreach (var npc in nivel.NPCs) objetosSolidos.Add(npc.Bounds);
             foreach (var guardia in nivel.Guardias) objetosSolidos.Add(guardia.Imagen.Bounds);
             foreach (var puerta in nivel.Puertas) if (puerta.EstaAbierta == false) objetosSolidos.Add(puerta.Imagen.Bounds);
-            foreach (var pared in nivel.Paredes) objetosSolidos.Add(pared.Bounds);
+            if (nivel.ParedesMatematicas != null) foreach (var pared in nivel.ParedesMatematicas) objetosSolidos.Add(pared);
             if (nivel.Escondites != null) foreach (var escondite in nivel.Escondites) objetosSolidos.Add(escondite.Imagen.Bounds);
-            if (nivel.Cofres != null) foreach (var cofre in nivel.Cofres) objetosSolidos.Add(cofre.Imagen.Bounds);
+            if (nivel.EsconditeCod != null) foreach (var cofre in nivel.EsconditeCod) objetosSolidos.Add(cofre.Imagen.Bounds);
             if (nivel.MonitorNivel != null) objetosSolidos.Add(nivel.MonitorNivel.Imagen.Bounds);
             foreach (var camara in nivel.Camaras) if (camara.estaActiva == true) objetosSolidos.Add(camara.Imagen.Bounds);
 
@@ -57,7 +60,6 @@ namespace EscapeRoom
 
             if (accion == false) seguroSoltarTecla = true;
 
-
             if (Atrapado == true)
             {
                 if (accion == true && seguroSoltarTecla == true)
@@ -66,7 +68,46 @@ namespace EscapeRoom
                     nivel.ReiniciarNivel();
                 }
 
-                return "¡Te han atrapado! Presiona la tecla de acción (E) para reiniciar.";
+                return Traductor.Obtener("mensajes_juego.prisionero.atrapado");
+            }
+
+            if (this.NPCconversando != null)
+            {
+                string textoActual = "";
+                if (NPCconversando.DialogosPorPasos.Count > 0)
+                    textoActual = NPCconversando.DialogosPorPasos[NPCconversando.PaginaActual];
+                else
+                    textoActual = NPCconversando.Dialogo;
+
+                if (accion == true && seguroSoltarTecla == true)
+                {
+                    seguroSoltarTecla = false;
+                    bool historiaTerminada = (NPCconversando.DialogosPorPasos.Count == 0) || (NPCconversando.PaginaActual >= NPCconversando.DialogosPorPasos.Count - 1);
+
+                    if (historiaTerminada)
+                    {
+                        if (NPCconversando.ObjetoaDar != null && NPCconversando.YaDioObjeto == false)
+                        {
+                            Inventario.Add(NPCconversando.ObjetoaDar);
+                            textoActual += Traductor.Obtener("mensajes_juego.prisionero.objeto_recibido", NPCconversando.ObjetoaDar.Descripcion);
+                        }
+
+                        NPCconversando.YaDioObjeto = true;
+
+                        this.NPCconversando = null;
+                        this.EstaLeyendo = false;
+                        estoyEnNPC = false;
+                        return textoActual;
+                    }
+                    else
+                    {
+                        NPCconversando.PaginaActual++;
+                        return NPCconversando.DialogosPorPasos[NPCconversando.PaginaActual];
+                    }
+                }
+
+                estoyEnNPC = true;
+                return textoActual;
             }
 
             if (EstaLeyendo == true)
@@ -78,24 +119,21 @@ namespace EscapeRoom
                 }
                 return "";
             }
-
-
             foreach (var npc in nivel.NPCs)
             {
-                if (areaInteraccion.IntersectsWith(npc.Bounds) && estoyEnNPC == false && accion == true && seguroSoltarTecla == true)
+                if (areaInteraccion.IntersectsWith(npc.Bounds) && accion == true && seguroSoltarTecla == true)
                 {
-                    npc.Hablar(nivel);
-                    estoyEnNPC = true;
-                    EstaLeyendo = true;
                     seguroSoltarTecla = false;
-                    if (npc.ObjetoaDar != null && npc.YaDioObjeto == false)
-                    {
-                        Inventario.Add(npc.ObjetoaDar);
-                        npc.YaDioObjeto = true;
-                        return $"NPC: {npc.Dialogo} \n\nAdemás, te da: {npc.ObjetoaDar.Descripcion}";
-                    }
-                    return $"{npc.Dialogo}";
 
+                    this.NPCconversando = npc;
+                    this.EstaLeyendo = true;
+                    estoyEnNPC = true;
+                    npc.PaginaActual = 0;
+
+                    if (npc.DialogosPorPasos.Count > 0)
+                        return npc.DialogosPorPasos[0];
+                    else
+                        return npc.Dialogo;
                 }
             }
 
@@ -107,7 +145,7 @@ namespace EscapeRoom
                     {
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return $"Ya revisaste {escondite.Nombre} y no hay nada más aquí.";
+                        return Traductor.Obtener("mensajes_juego.prisionero.escondite_ya_revisado", escondite.Nombre);
                     }
                     escondite.YaRevisado = true;
 
@@ -118,19 +156,19 @@ namespace EscapeRoom
 
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return $"¡Revisas {escondite.Nombre} y encuentras algo! Recibes: {escondite.ObjetoOculto.Descripcion}";
+                        return Traductor.Obtener("mensajes_juego.prisionero.escondite_encontro_algo", escondite.Nombre, escondite.ObjetoOculto.Descripcion);
                     }
                     else
                     {
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return $"Revisas {escondite.Nombre}... pero solo hay polvo y telarañas.";
+                        return Traductor.Obtener("mensajes_juego.prisionero.escondite_vacio", escondite.Nombre);
                     }
                 }
             }
 
 
-            foreach (var cofre in nivel.Cofres)
+            foreach (var cofre in nivel.EsconditeCod)
             {
                 if (areaInteraccion.IntersectsWith(cofre.Imagen.Bounds) && interactuar == false && accion == true && seguroSoltarTecla == true)
                 {
@@ -139,7 +177,7 @@ namespace EscapeRoom
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
 
-                        return $"Ya revisaste {cofre.Nombre} y no hay nada más aquí.";
+                        return Traductor.Obtener("mensajes_juego.prisionero.cofre_ya_revisado", cofre.Nombre);
                     }
                     cofre.YaRevisado = true;
                     if (cofre.ObjetoOculto != null)
@@ -148,13 +186,13 @@ namespace EscapeRoom
                         cofre.ObjetoOculto.Recogido = true;
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return $"¡Abres {cofre.Nombre} y encuentras algo! Recibes: {cofre.ObjetoOculto.Descripcion}";
+                        return Traductor.Obtener("mensajes_juego.prisionero.cofre_encontro_algo", cofre.Nombre, cofre.ObjetoOculto.Descripcion);
                     }
                     else
                     {
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return $"Abres {cofre.Nombre}... pero solo hay polvo y telarañas.";
+                        return Traductor.Obtener("mensajes_juego.prisionero.cofre_vacio", cofre.Nombre);
                     }
                 }
             }
@@ -174,21 +212,22 @@ namespace EscapeRoom
 
                         nivel.PausarNivel();
                         string respuestaJugador = Microsoft.VisualBasic.Interaction.InputBox(
-                            "La puerta tiene un teclado electrónico. Ingresa el PIN de 3 dígitos:",
-                            "Cerradura de Seguridad",
+                            Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_pin_prompt"),
+                            Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_pin_titulo"),
                             "");
                         nivel.ReanudarNivel();
+
                         if (respuestaJugador == puerta.Codigo)
                         {
                             puerta.EstaAbierta = true;
                             puerta.Imagen.Bounds = Rectangle.Empty;
                             nivel.NivelSuperado = true;
 
-                            return "¡BEEP! Código aceptado. La puerta se ha abierto.";
+                            return Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_codigo_aceptado");
                         }
                         else if (respuestaJugador != "") // Si no le dio a Cancelar
                         {
-                            return "¡ERROR! Código incorrecto. Búscalo en las celdas.";
+                            return Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_codigo_incorrecto");
                         }
 
                         return ""; // Si le dio a cancelar, no decimos nada
@@ -208,11 +247,15 @@ namespace EscapeRoom
                         estoyEnPuerta = true;
                         puerta.EstaAbierta = true;
                         puerta.Imagen.Bounds = Rectangle.Empty;
-                        //Resources.puerta_abierta; // Cambia la imagen de la puerta a abierta
                         Inventario.Remove(llaveUsada);
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return $"Has abierto la puerta con: Llave {llaveUsada.Descripcion}";
+                        if (puerta.EsSalidaFinal == true)
+                        {
+                            nivel.NivelSuperado = true;
+                            return Traductor.Obtener("mensajes_juego.prisionero.puerta_final_abierta", llaveUsada.Descripcion);
+                        }
+                        return Traductor.Obtener("mensajes_juego.prisionero.puerta_abierta", llaveUsada.Descripcion);
                     }
 
                     else
@@ -220,7 +263,7 @@ namespace EscapeRoom
                         estoyEnPuerta = true;
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return $"Necesitas: Llave{puerta.Descripcion} para abrir esta puerta.";
+                        return Traductor.Obtener("mensajes_juego.prisionero.puerta_necesita_llave", puerta.Descripcion);
                     }
                 }
             }
@@ -228,7 +271,6 @@ namespace EscapeRoom
             foreach (var llave in nivel.Llaves)
             {
                 if (llave == null || llave.Imagen == null) continue;
-
 
                 if (areaInteraccion.IntersectsWith(llave.Imagen.Bounds))
                 {
@@ -241,7 +283,7 @@ namespace EscapeRoom
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
 
-                        return $"Has recogido: Llave {llave.Descripcion}";
+                        return Traductor.Obtener("mensajes_juego.prisionero.llave_recogida", llave.Descripcion);
                     }
                 }
             }
@@ -254,7 +296,7 @@ namespace EscapeRoom
 
                     Atrapado = true;
                     seguroSoltarTecla = false;
-                    return $"Guardia: {guardia.Dialogo}";
+                    return Traductor.Obtener("mensajes_juego.prisionero.dialogo_guardia", guardia.Dialogo);
 
                 }
             }
@@ -264,7 +306,7 @@ namespace EscapeRoom
                 {
                     Atrapado = true;
                     seguroSoltarTecla = false;
-                    return $"¡Una cámara de seguridad te ha detectado!";
+                    return Traductor.Obtener("mensajes_juego.prisionero.camara_detectada");
                 }
 
             }
@@ -277,7 +319,7 @@ namespace EscapeRoom
                     {
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
-                        return $"El monitor muestra una imagen borrosa... parece que ya lo desactivaste.";
+                        return Traductor.Obtener("mensajes_juego.prisionero.monitor_ya_desactivado");
                     }
                     estoyEnPuerta = true;
                     EstaLeyendo = true;
@@ -285,8 +327,8 @@ namespace EscapeRoom
                     nivel.PausarNivel();
 
                     string respuestaJugador = Microsoft.VisualBasic.Interaction.InputBox(
-            "Terminal de Seguridad Bloqueada.\nIngresa el código PIN de 3 dígitos para apagar las cámaras:",
-            "Monitor de Cámaras", "");
+            Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_pin_prompt"),
+            Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_pin_titulo"), "");
 
                     nivel.ReanudarNivel();
                     if (respuestaJugador == nivel.MonitorNivel.Codigo)
@@ -299,36 +341,46 @@ namespace EscapeRoom
                             camara.Imagen.SizeMode = PictureBoxSizeMode.Zoom;
                             camara.Imagen.Image = Properties.Resources.camara_off;
                         }
-                        return "¡BEEP! Código aceptado. Las cámaras han sido desactivadas.";
+                        return Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_codigo_aceptado");
                     }
                     else if (respuestaJugador != "" || respuestaJugador != nivel.MonitorNivel.Codigo)
                     {
-                        return "¡ERROR! Código incorrecto. Búscalo en las celdas.";
+                        return Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_codigo_incorrecto");
                     }
                     return "";
                 }
             }
-            if (estoyEnNPC == false && estoyEnPuerta == false) nivel.LabelDialogo?.Hide();
-            if (der && chocaDer == false && x + Imagen.Width < nivel.Width) x += velocidad;
-            if (izq && chocaIzq == false && x > 0) x -= velocidad;
-            if (arr && chocaArr == false && y > 0) y -= velocidad;
-            if (abj && chocaAbj == false && y + Imagen.Height < nivel.Height) y += velocidad;
 
-            Imagen.Location = new Point(x, y);
+
+            if (estoyEnNPC == false && estoyEnPuerta == false && EstaLeyendo == false && NPCconversando == null)
+            {
+                nivel.LabelDialogo?.Hide();
+            }
+
+            if (NPCconversando == null && EstaLeyendo == false && Atrapado == false)
+            {
+                if (der && chocaDer == false && x + Imagen.Width < nivel.Width) x += velocidad;
+                if (izq && chocaIzq == false && x > 0) x -= velocidad;
+                if (arr && chocaArr == false && y > 0) y -= velocidad;
+                if (abj && chocaAbj == false && y + Imagen.Height < nivel.Height) y += velocidad;
+
+                Imagen.Location = new Point(x, y);
+            }
+
             return "";
         }
+
         public string ObtenerTextoInventario()
         {
             if (Inventario.Count == 0)
             {
-                return "Tu mochila está vacía.";
+                return Traductor.Obtener("mensajes_juego.prisionero.inventario_vacio");
             }
 
-            string contenido = "Llevas contigo:\n\n";
+            string contenido = Traductor.Obtener("mensajes_juego.prisionero.inventario_encabezado");
             contenido += string.Join("\n- ", Inventario.Select(i => i.Descripcion));
 
             return contenido;
         }
     }
 }
-

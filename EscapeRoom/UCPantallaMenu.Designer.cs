@@ -33,8 +33,8 @@
             btnSalir = new Button();
             panelcargar = new Panel();
             btnConfirmarCarga = new Button();
-            listBox1 = new ListBox();
-            partidascargadas = new ComboBox();
+            listpartidas = new ListBox();
+            btnIdioma = new Button();
             panelnombre = new Panel();
             btnAceptarNombr = new Button();
             txtNombreUsuario = new TextBox();
@@ -44,9 +44,9 @@
             // 
             // BtnNuevaPartida
             // 
-            BtnNuevaPartida.Location = new Point(299, 141);
+            BtnNuevaPartida.Location = new Point(299, 123);
             BtnNuevaPartida.Name = "BtnNuevaPartida";
-            BtnNuevaPartida.Size = new Size(165, 39);
+            BtnNuevaPartida.Size = new Size(202, 57);
             BtnNuevaPartida.TabIndex = 10;
             BtnNuevaPartida.Text = "Nueva Partida";
             BtnNuevaPartida.UseVisualStyleBackColor = true;
@@ -56,7 +56,7 @@
             // 
             btnCargarPartida.Location = new Point(299, 204);
             btnCargarPartida.Name = "btnCargarPartida";
-            btnCargarPartida.Size = new Size(165, 36);
+            btnCargarPartida.Size = new Size(202, 54);
             btnCargarPartida.TabIndex = 11;
             btnCargarPartida.Text = "Cargar Partida";
             btnCargarPartida.UseVisualStyleBackColor = true;
@@ -64,9 +64,9 @@
             // 
             // btnSalir
             // 
-            btnSalir.Location = new Point(299, 279);
+            btnSalir.Location = new Point(299, 347);
             btnSalir.Name = "btnSalir";
-            btnSalir.Size = new Size(165, 42);
+            btnSalir.Size = new Size(202, 54);
             btnSalir.TabIndex = 12;
             btnSalir.Text = "Salir del Juego";
             btnSalir.UseVisualStyleBackColor = true;
@@ -75,9 +75,8 @@
             // panelcargar
             // 
             panelcargar.Controls.Add(btnConfirmarCarga);
-            panelcargar.Controls.Add(listBox1);
-            panelcargar.Controls.Add(partidascargadas);
-            panelcargar.Location = new Point(324, 35);
+            panelcargar.Controls.Add(listpartidas);
+            panelcargar.Location = new Point(12, 33);
             panelcargar.Name = "panelcargar";
             panelcargar.Size = new Size(460, 343);
             panelcargar.TabIndex = 13;
@@ -85,37 +84,38 @@
             // 
             // btnConfirmarCarga
             // 
-            btnConfirmarCarga.Location = new Point(95, 200);
+            btnConfirmarCarga.Location = new Point(322, 25);
             btnConfirmarCarga.Name = "btnConfirmarCarga";
-            btnConfirmarCarga.Size = new Size(94, 29);
+            btnConfirmarCarga.Size = new Size(116, 49);
             btnConfirmarCarga.TabIndex = 2;
             btnConfirmarCarga.Text = "button1";
             btnConfirmarCarga.UseVisualStyleBackColor = true;
             btnConfirmarCarga.Click += btnConfirmarCarga_Click_1;
             // 
-            // listBox1
+            // listpartidas
             // 
-            listBox1.FormattingEnabled = true;
-            listBox1.Location = new Point(48, 79);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(150, 84);
-            listBox1.TabIndex = 1;
-            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+            listpartidas.FormattingEnabled = true;
+            listpartidas.Location = new Point(20, 25);
+            listpartidas.Name = "listpartidas";
+            listpartidas.Size = new Size(271, 264);
+            listpartidas.TabIndex = 1;
+            listpartidas.SelectedIndexChanged += listBox1_SelectedIndexChanged;
             // 
-            // partidascargadas
+            // btnIdioma
             // 
-            partidascargadas.FormattingEnabled = true;
-            partidascargadas.Location = new Point(47, 12);
-            partidascargadas.Name = "partidascargadas";
-            partidascargadas.Size = new Size(151, 28);
-            partidascargadas.TabIndex = 0;
+            btnIdioma.Location = new Point(299, 278);
+            btnIdioma.Name = "btnIdioma";
+            btnIdioma.Size = new Size(202, 54);
+            btnIdioma.TabIndex = 13;
+            btnIdioma.UseVisualStyleBackColor = true;
+            btnIdioma.Click += btnIdioma_Click;
             // 
             // panelnombre
             // 
             panelnombre.BackColor = SystemColors.ButtonHighlight;
             panelnombre.Controls.Add(btnAceptarNombr);
             panelnombre.Controls.Add(txtNombreUsuario);
-            panelnombre.Location = new Point(18, 148);
+            panelnombre.Location = new Point(64, 395);
             panelnombre.Name = "panelnombre";
             panelnombre.Size = new Size(765, 305);
             panelnombre.TabIndex = 14;
@@ -125,7 +125,7 @@
             // 
             btnAceptarNombr.Location = new Point(498, 76);
             btnAceptarNombr.Name = "btnAceptarNombr";
-            btnAceptarNombr.Size = new Size(94, 51);
+            btnAceptarNombr.Size = new Size(122, 51);
             btnAceptarNombr.TabIndex = 1;
             btnAceptarNombr.Text = "ok";
             btnAceptarNombr.UseVisualStyleBackColor = true;
@@ -145,6 +145,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaption;
             Controls.Add(btnSalir);
+            Controls.Add(btnIdioma);
             Controls.Add(btnCargarPartida);
             Controls.Add(BtnNuevaPartida);
             Controls.Add(panelnombre);
@@ -164,11 +165,11 @@
         private Button btnCargarPartida;
         private Button btnSalir;
         private Panel panelcargar;
-        private ListBox listBox1;
-        private ComboBox partidascargadas;
+        private ListBox listpartidas;
         private Panel panelnombre;
         private Button btnAceptarNombr;
         private TextBox txtNombreUsuario;
         private Button btnConfirmarCarga;
+        private Button btnIdioma;
     }
 }

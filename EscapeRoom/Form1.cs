@@ -9,7 +9,7 @@ namespace EscapeRoom
         {
             InitializeComponent();
             this.ClientSize = new Size(800, 720);
-
+            Traductor.CargarIdioma("es");
             this.StartPosition = FormStartPosition.CenterScreen;
             // Configuración de la ventana (puedes descomentarlo cuando gustes)
             /*

@@ -1,0 +1,350 @@
+{
+  "proyecto": "EscapeRoom",
+  "idioma": "es",
+
+  "formularios": {
+    "Form1": {
+      "titulo_ventana": "Sala de Escape"
+    }
+  },
+
+  "pantallas": {
+    "UCPantallaMenu": {
+      "descripcion": "Pantalla del menú principal",
+      "botones": {
+        "BtnNuevaPartida": "Nueva Partida",
+        "btnCargarPartida": "Cargar Partida",
+        "btnSalir": "Salir del Juego",
+        "btnConfirmarCarga": "Confirmar",
+        "btnAceptarNombr": "Aceptar"
+      },
+      "controles": {
+        "txtNombreUsuario": "(cuadro de texto — nombre del jugador)",
+        "partidascargadas": "(lista desplegable — partidas guardadas)",
+        "listBox1": "(lista — partidas guardadas)"
+      },
+      "paneles": {
+        "panelnombre": "Panel para ingresar nombre del prisionero",
+        "panelcargar": "Panel para cargar partida guardada"
+      },
+      "messageboxes": {
+        "carpeta_vacia": "La carpeta existe, pero no hay partidas guardadas adentro.",
+        "carpeta_no_encontrada": "No se encontró la carpeta de partidas. ¡Juega una nueva partida para crearla!",
+        "nombre_vacio": "Por favor, ingresa un nombre para tu prisionero.",
+        "selecciona_partida": "Por favor, selecciona una partida de la lista."
+      }
+    },
+
+    "UCPantallaJuego": {
+      "descripcion": "Pantalla de juego con menú de pausa",
+      "botones": {
+        "btnPausaJuego": "Pausa",
+        "btnReanudar": "Reanudar",
+        "btnGuadarPartida": "Guardar Partida",
+        "btncargar": "Cargar Partida",
+        "btnInventario": "Mostrar Inventario",
+        "btnSaliraMenu": "Salir"
+      },
+      "messageboxes": {
+        "juego_guardado": "Juego guardado exitosamente como: {0}",
+        "guardado_no_encontrado": "No se encontró el archivo de guardado. Quizás no has guardado aún.",
+        "nivel_no_iniciado": "Debes iniciar el nivel primero antes de cargar tu posición.",
+        "punto_de_control_cargado": "¡Punto de control cargado!",
+        "titulo_inventario": "Inventario",
+        "nivel_superado": "¡Nivel superado!",
+        "todos_niveles_superados": "¡Has superado todos los niveles!",
+        "error_al_cargar": "Hubo un error al cargar el archivo. Volviendo al menú.",
+        "escape_exitoso": "¡Has escapado de la prisión! Has ganado."
+      }
+    }
+  },
+
+  "niveles": {
+    "Nivel1": {
+      "nombre": "Nivel 1 - El Pabellón de Celdas",
+      "controles": {
+        "labels": {
+          "lblDialogo": {
+            "texto": "(diálogo dinámico en tiempo de ejecución)",
+            "descripcion": "Etiqueta de diálogo inferior — se muestra al interactuar con NPCs u objetos"
+          },
+          "lbltexto": {
+            "texto": "(texto de diálogo largo dinámico)",
+            "descripcion": "Etiqueta de texto principal — muestra textos extensos al pie de pantalla"
+          }
+        },
+        "pictureBoxes": {
+          "pbCama": "Cama 1 (celda principal — contiene llave oculta)",
+          "pbCama2": "Cama 2 (celda izquierda superior)",
+          "pbCama3": "Cama 3 (celda izquierda inferior)",
+          "pbCama4": "Cama 4 (celda derecha inferior)",
+          "pbcofre": "Cofre 1 (contiene nota con pista del código)",
+          "pbcofre2": "Cofre 2 (contiene nota con pista del código)",
+          "pbcofre3": "Cofre 3 (contiene nota con pista del código)",
+          "pbpuerta1": "Puerta de la celda 1",
+          "pbPuerta2": "Puerta de la celda 2",
+          "pbpuerta3": "Puerta de la celda 3",
+          "pbpuerta4": "Puerta de la celda 4",
+          "pbSalida": "Puerta de salida principal (requiere código)"
+        }
+      },
+      "npcs": {
+        "jhon": {
+          "nombre": "Jhon",
+          "dialogos": [
+            "Jhon: Psst... Mario, acércate rápido.",
+            "Jhon: Los demás escondieron llaves de madera y códigos en sus celdas para escapar.",
+            "Jhon: Ahorita todos están en el patio. ¡Es tu única oportunidad!",
+            "Jhon: Toma mi llave... ¡y date prisa antes de que te vean los guardias!"
+          ],
+          "objeto_que_da": "Llave de la celda de Jhon"
+        }
+      },
+      "llaves": {
+        "llave": {
+          "id": "llave",
+          "descripcion": "Llave de la celda de Jhon"
+        },
+        "llave2": {
+          "id": "llave2",
+          "descripcion": "Llave de la celda 2"
+        },
+        "llave3": {
+          "id": "llave3",
+          "descripcion": "Llave de la celda 3"
+        },
+        "llave4": {
+          "id": "llave4",
+          "descripcion": "Llave de la celda 4"
+        }
+      },
+      "puertas": {
+        "puerta1": {
+          "llave_requerida": "llave",
+          "descripcion": " de la celda 1"
+        },
+        "puerta2": {
+          "llave_requerida": "llave2",
+          "descripcion": " de la celda 2"
+        },
+        "puerta3": {
+          "llave_requerida": "llave3",
+          "descripcion": " de la celda 3"
+        },
+        "puerta4": {
+          "llave_requerida": "llave4",
+          "descripcion": " de la celda 4"
+        },
+        "salida": {
+          "llave_requerida": "llave3",
+          "descripcion": "Puerta de la celda",
+          "requiere_codigo": true,
+          "es_salida_final": true,
+          "nota": "El código es generado aleatoriamente en cada partida (3 dígitos)"
+        }
+      },
+      "pistas_codigo": {
+        "nota1": "Nota arrugada: El 1er número es {0}",
+        "nota2": "Nota arrugada: El 2do número es {0}",
+        "nota3": "Nota arrugada: El 3er número es {0}"
+      },
+      "escondites": {
+        "cama": "la Cama",
+        "cofre": "el Cofre"
+      }
+    },
+
+    "Nivel2": {
+      "nombre": "Nivel 2 - La Sala de Seguridad",
+      "controles": {
+        "pictureBoxes": {
+          "pbMonitores": "Monitores de seguridad (panel de cámaras — requiere código para desactivar)",
+          "pbcamara1": "Cámara de seguridad 1",
+          "pbcamara2": "Cámara de seguridad 2",
+          "pbBasura1": "Bote de basura (contiene llave de la Sala de Seguridad)",
+          "pbescritorio": "Escritorio (contiene llave de celda + planos del cuarto vigilado)",
+          "pbcama1": "Cama 1 (celda inferior izquierda — contiene llave)",
+          "pbCama2": "Cama 2 (celda inferior central — contiene llave)",
+          "pbcofre1": "Cofre 1 (puede contener pista del código de cámaras)",
+          "pbcofre2": "Cofre 2 (puede contener pista del código de cámaras)",
+          "pbcofre3": "Cofre 3 (puede contener pista del código de cámaras)",
+          "pbcofre4": "Cofre de la salida (contiene llave de la Salida Principal)",
+          "pbpuerta1": "Puerta de la celda 1",
+          "pbpuerta2": "Puerta de la celda 2",
+          "pbpuerta3": "Puerta de la celda 3",
+          "pbpuerta4": "Puerta de la Sala de Cámaras",
+          "pbsalida": "Salida Principal"
+        }
+      },
+      "llaves": {
+        "llave1": {
+          "id": "llave1",
+          "descripcion": "de una celda"
+        },
+        "llave2": {
+          "id": "llave2",
+          "descripcion": "de una celda"
+        },
+        "llave3": {
+          "id": "llave3",
+          "descripcion": "de una celda"
+        },
+        "llave4": {
+          "id": "llave4",
+          "descripcion": "de la Sala de Seguridad.\n\n[Nota arrugada adjunta: 'El camión de traslado llegará a las {0}'].\nMario se plantea secuestrar ese camión para escapar."
+        },
+        "llaveSalida": {
+          "id": "llaveSalida",
+          "descripcion": "de la Salida Principal"
+        }
+      },
+      "puertas": {
+        "puerta1": {
+          "llave_requerida": "llave1",
+          "descripcion": " Puerta de la celda 1"
+        },
+        "puerta2": {
+          "llave_requerida": "llave2",
+          "descripcion": " Puerta de la celda 2"
+        },
+        "puerta3": {
+          "llave_requerida": "llave3",
+          "descripcion": " Puerta de la celda 3"
+        },
+        "puerta4": {
+          "llave_requerida": "llave4",
+          "descripcion": " de la Sala de Cámaras"
+        },
+        "salida": {
+          "llave_requerida": "llaveSalida",
+          "descripcion": "Salida",
+          "es_salida_final": true
+        }
+      },
+      "pistas_camaras": {
+        "pistacam": "Archivo USB: el 1er numero de las camaras es {0}",
+        "pistacam2": "Archivo USB: el 2do numero de las camaras es {0}",
+        "pistacam3": "Archivo USB: el 3er numero de las camaras es {0}"
+      },
+      "escondites": {
+        "bote_basura": "el Bote de Basura",
+        "cofre_salida": "el Cofre de la salida",
+        "escritorio": "el Escritorio",
+        "cama": "la Cama",
+        "cofre": "el Cofre"
+      },
+      "dialogo_planos": "[Mario observa unos planos sobre el escritorio. En ellos descubre que la llave de salida está restringida y fuertemente oculta en un cuarto vigilado por una cámara]."
+    },
+
+    "Nivel3": {
+      "nombre": "Nivel 3 - La Fuga en el Autobús",
+      "controles": {
+        "pictureBoxes": {
+          "pbautobus": "Autobús de traslado penitenciario (objetivo final de fuga)"
+        }
+      },
+      "npcs": {
+        "miAutobus": {
+          "nombre": "Autobús de Prisión",
+          "tipo": "Autobus",
+          "id": 99,
+          "dialogos": [
+            "Mario: ¡Oye tú, bájate! (Se escucha un forcejeo intenso...)",
+            "Mario: ¡Toma esto! (El conductor cae desmayado)."
+          ]
+        }
+      }
+    }
+  },
+
+  "mensajes_juego": {
+    "prisionero": {
+      "atrapado": "¡Te han atrapado! Presiona la tecla de acción (E) para reiniciar.",
+      "objeto_recibido": "\n\n[Recibiste: {0}]",
+      "escondite_ya_revisado": "Ya revisaste {0} y no hay nada más aquí.",
+      "escondite_encontro_algo": "¡Revisas {0} y encuentras algo! Recibes: {1}",
+      "escondite_vacio": "Revisas {0}... pero solo hay polvo y telarañas.",
+      "cofre_ya_revisado": "Ya revisaste {0} y no hay nada más aquí.",
+      "cofre_encontro_algo": "¡Abres {0} y encuentras algo! Recibes: {1}",
+      "cofre_vacio": "Abres {0}... pero solo hay polvo y telarañas.",
+      "puerta_final_abierta": "¡Has abierto la puerta final con: Llave {0}! ¡Felicidades, has escapado!",
+      "puerta_abierta": "Has abierto la puerta con: Llave {0}",
+      "puerta_necesita_llave": "Necesitas: Llave{0} para abrir esta puerta.",
+      "llave_recogida": "Has recogido: Llave {0}",
+      "dialogo_guardia": "Guardia: {0}",
+      "camara_detectada": "¡Una cámara de seguridad te ha detectado!",
+      "monitor_ya_desactivado": "El monitor muestra una imagen borrosa... parece que ya lo desactivaste.",
+      "inventario_vacio": "Tu mochila está vacía.",
+      "inventario_encabezado": "Llevas contigo:\n\n"
+    },
+    "terminal_seguridad": {
+      "puerta_pin_prompt": "La puerta tiene un teclado electrónico. Ingresa el PIN de 3 dígitos:",
+      "puerta_pin_titulo": "Cerradura de Seguridad",
+      "puerta_codigo_aceptado": "¡BEEP! Código aceptado. La puerta se ha abierto.",
+      "puerta_codigo_incorrecto": "¡ERROR! Código incorrecto. Búscalo en las celdas.",
+      "camara_pin_prompt": "Terminal de Seguridad Bloqueada.\nIngresa el código PIN de 3 dígitos para apagar las cámaras:",
+      "camara_pin_titulo": "Monitor de Cámaras",
+      "camara_codigo_aceptado": "¡BEEP! Código aceptado. Las cámaras han sido desactivadas.",
+      "camara_codigo_incorrecto": "¡ERROR! Código incorrecto. Búscalo en las celdas."
+    }
+  },
+
+  "clases": {
+    "Guardia": {
+      "descripcion": "Personaje guardia que patrulla de izquierda a derecha",
+      "dialogo_al_atrapar": "¡Alto!"
+    },
+    "NPC": {
+      "descripcion": "Personaje no jugador con el que el prisionero puede interactuar",
+      "metodo_hablar": "Devuelve el diálogo actual y avanza a la siguiente página"
+    },
+    "Autobus": {
+      "descripcion": "NPC especial — autobús de traslado penitenciario que el jugador debe abordar para escapar en el Nivel 3"
+    },
+    "Guardar": {
+      "descripcion": "Clase estática para guardar y cargar partidas en formato JSON",
+      "carpeta_partidas": "Partidas Guardadas"
+    },
+    "EstadoJuego": {
+      "descripcion": "Modelo de datos que representa el estado serializable de una partida guardada",
+      "campos": {
+        "NombrePrisionero": "Nombre del jugador / prisionero",
+        "PrisioneroX": "Posición X del prisionero en el mapa",
+        "PrisioneroY": "Posición Y del prisionero en el mapa",
+        "NivelActual": "Número del nivel en curso",
+        "idioma": "Idioma seleccionado para el juego",
+        "Dificultad": "Nivel de dificultad seleccionado",
+        "CodigoPuertaFinal": "Código de 3 dígitos para la puerta de salida del nivel",
+        "InventarioPrisionero": "Lista de objetos que lleva el jugador",
+        "IdsLlavesRecogidas": "IDs de las llaves ya recogidas",
+        "IdsPuertasAbiertas": "IDs de las puertas ya abiertas"
+      }
+    },
+    "Puerta": {
+      "descripcion": "Objeto que bloquea el paso hasta que se usa la llave correcta o se ingresa el código",
+      "campos": {
+        "Id": "Identificador único (debe coincidir con el Id de la llave)",
+        "Descripcion": "Texto que se muestra al intentar abrir sin la llave correcta",
+        "RequiereCodigo": "Indica si la puerta se abre con código PIN en lugar de llave",
+        "EsSalidaFinal": "Indica si abrir esta puerta supera el nivel",
+        "Codigo": "PIN de 3 dígitos requerido (solo si RequiereCodigo es true)",
+        "EstaAbierta": "Estado actual de la puerta"
+      }
+    },
+    "Llave": {
+      "descripcion": "Objeto coleccionable que abre puertas específicas. Hereda de Objeto.",
+      "campos": {
+        "Id": "Identificador único que debe coincidir con el Id de la puerta objetivo",
+        "Descripcion": "Texto que se muestra al recoger o usar la llave"
+      }
+    },
+    "Objeto": {
+      "descripcion": "Clase base para todos los ítems del inventario del jugador",
+      "campos": {
+        "Id": "Identificador único del objeto",
+        "Descripcion": "Texto descriptivo que se muestra al jugador",
+        "Recogido": "Indica si el objeto ya fue tomado del escondite"
+      }
+    }
+  }
+}

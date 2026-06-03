@@ -28,10 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Nivel3));
+            pbautobus = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pbautobus).BeginInit();
+            SuspendLayout();
+            // 
+            // pbautobus
+            // 
+            pbautobus.BackColor = Color.Transparent;
+            pbautobus.Image = (Image)resources.GetObject("pbautobus.Image");
+            pbautobus.Location = new Point(402, 380);
+            pbautobus.Name = "pbautobus";
+            pbautobus.Size = new Size(325, 147);
+            pbautobus.SizeMode = PictureBoxSizeMode.StretchImage;
+            pbautobus.TabIndex = 16;
+            pbautobus.TabStop = false;
+            // 
+            // Nivel3
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ActiveCaptionText;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImageLayout = ImageLayout.Stretch;
+            Controls.Add(pbautobus);
+            Name = "Nivel3";
+            Size = new Size(800, 700);
+            Load += Nivel3_Load;
+            ((System.ComponentModel.ISupportInitialize)pbautobus).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private PictureBox pbautobus;
     }
 }

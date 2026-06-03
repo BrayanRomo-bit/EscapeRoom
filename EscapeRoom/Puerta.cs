@@ -12,6 +12,7 @@ namespace EscapeRoom
         public string Descripcion { get; set; } 
         public PictureBox Imagen { get; set; } 
         public bool RequiereCodigo { get; set; } = false;
+        public bool EsSalidaFinal { get; set; } = false;
         public string Codigo { get; set; } = "";
         public bool EstaAbierta { get; set; } = false;
 

@@ -11,13 +11,15 @@ namespace EscapeRoom
         public int Id { get; set; }
         public string Dialogo { get; set; }
         public bool YaHablo { get; set; }
-        public Objeto ObjetoaDar {  get; set; }
+        public Objeto ObjetoaDar { get; set; }
         public bool YaDioObjeto { get; set; }
+        public List<string> DialogosPorPasos { get; set; } = new List<string>();
 
-        public NPC(int id, string dialogo, Image imagen, Point posicion)
+        public int PaginaActual { get; set; } = 0;
+
+        public NPC(int id,  Image imagen, Point posicion)
         {
             this.Id = id;
-            this.Dialogo = dialogo;
             this.Image = imagen;
             this.Location = posicion;
             this.Size = new Size(50, 50);
@@ -25,13 +27,16 @@ namespace EscapeRoom
             this.YaHablo = false;
             this.BackColor = Color.Transparent;
         }
-        public string Hablar(NivelBase nivel)
+        public string Hablar()
         {
-            if (YaHablo) return "Ya te he dicho todo lo que sé.";
-            YaHablo = true;
-            nivel.LabelDialogo.Text = Dialogo;
-            nivel.LabelDialogo.Show();
-            return Dialogo;
+            if (DialogosPorPasos.Count == 0) return "";
+
+            string textoActual = DialogosPorPasos[PaginaActual];
+            if (PaginaActual < DialogosPorPasos.Count - 1)
+            {
+                PaginaActual++;
+            }
+            return textoActual;
         }
 
 

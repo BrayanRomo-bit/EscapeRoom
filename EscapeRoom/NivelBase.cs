@@ -26,11 +26,12 @@ namespace EscapeRoom
         protected List<Guardia> listaGuardias = new List<Guardia>();
         protected List<Prisionero> listaPrisioneros = new List<Prisionero>();
         protected List<Camara> listaCamaras = new List<Camara>();
+        protected List<Rectangle> paredesMatematicas = new List<Rectangle>();
 
         public List<Camara> Camaras { get { return listaCamaras; } }
         public List<Escondite> Escondites { get; set; } = new List<Escondite>();
-        public List<Escondite> Cofres { get; set; } = new List<Escondite>();
-        public List<PictureBox> Paredes { get; set; } = new List<PictureBox>();
+        public List<Escondite> EsconditeCod { get; set; } = new List<Escondite>();
+        public List<Rectangle> ParedesMatematicas { get { return paredesMatematicas; } }
 
         public Monitor MonitorNivel { get { return monitorNivel; } set { monitorNivel = value; } }
         public List<NPC> NPCs { get { return listaNPCs; } }
@@ -40,11 +41,11 @@ namespace EscapeRoom
         public List<Puerta> Puertas { get { return listaPuertas; } }
         public Label LabelDialogo { get { return lblDialogo; } }
         public bool NivelSuperado { get; set; } = false;
-
+        public bool EstaEnCinematica { get; set; } = false;
         protected Dictionary<int, string> baseDeDialogos = new Dictionary<int, string>();
         protected Dictionary<int, string> baseDeLLaves = new Dictionary<int, string>();
         protected Dictionary<int, string> baseDePuertas = new Dictionary<int, string>();
-
+        public Autobus miAutobus { get; set; }
         public event Action? Reinicio;
         public event Action? PedirPausa;
         public event Action? PedirReanudar;
@@ -69,9 +70,9 @@ namespace EscapeRoom
             Reinicio?.Invoke();
         }
 
-        public void ActualizarNivel(bool arr, bool abj, bool izq, bool der, bool accion, int ancho, int alto)
+        public virtual string ActualizarNivel(bool arr, bool abj, bool izq, bool der, bool accion, int ancho, int alto)
         {
-            if (prisionero == null) return;
+            if (prisionero == null) return "";
 
             string mensaje = prisionero.ProcesarMovimiento(arr, abj, izq, der, accion, this);
 
@@ -103,8 +104,9 @@ namespace EscapeRoom
                     listaLlaves.RemoveAt(i);
                 }
             }
-        }
 
+           return mensaje;
+        }
         protected void CrearJugador(int x, int y)
         {
 
@@ -135,7 +137,7 @@ namespace EscapeRoom
             pbGuardia.BringToFront();
         }
 
-        protected NPC CrearNPC(int x, int y, string Dialogo)
+        protected NPC CrearNPC(int x, int y)
         {
             PictureBox pbNpc = new PictureBox();
             pbNpc.Image = Properties.Resources.goku;
@@ -144,7 +146,7 @@ namespace EscapeRoom
             pbNpc.Size = new Size(50, 50);
             pbNpc.Location = new Point(x, y);
 
-            NPC nPC = new NPC(1, Dialogo, pbNpc.Image, pbNpc.Location);
+            NPC nPC = new NPC(1, pbNpc.Image, pbNpc.Location);
             this.Controls.Add(pbNpc);
             listaNPCs.Add(nPC);
             pbNpc.BringToFront();
@@ -154,7 +156,6 @@ namespace EscapeRoom
         public virtual void IniciarNivel()
         {
         }
-
 
     }
 }

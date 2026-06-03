@@ -21,7 +21,7 @@ namespace EscapeRoom
             foreach (var puerta in nivel.Puertas) objetosSolidos.Add(puerta.Imagen.Bounds);
             foreach (var npc in nivel.NPCs) objetosSolidos.Add(npc.Bounds);
             foreach (var prisionero in nivel.Prisioneros) objetosSolidos.Add(prisionero.Imagen.Bounds);
-            foreach (var pared in nivel.Paredes) objetosSolidos.Add(pared.Bounds);
+            if (nivel.ParedesMatematicas != null) foreach (var pared in nivel.ParedesMatematicas) objetosSolidos.Add(pared);
             if (nivel.Escondites != null) foreach (var escondite in nivel.Escondites) objetosSolidos.Add(escondite.Imagen.Bounds);
 
             bool chocaDer = false, chocaIzq = false;
