@@ -10,19 +10,19 @@ namespace EscapeRoom
     {
         public bool moveDerecha = true;
         public string Dialogo { get; set; }
-        public bool Atrapado { get; set; } = false;
         public Guardia(int x, int y, int velocidad, PictureBox imagen, string dialogo) : base(x, y, velocidad, imagen)
         {
             this.Dialogo = dialogo;
+
         }
-    ///hola
         public void Actualizar(bool arr, bool abj, bool izq, bool der, bool accion, NivelBase nivel)
         {
             List<Rectangle> objetosSolidos = new List<Rectangle>();
-            foreach (var muro in nivel.Muros) objetosSolidos.Add(muro.Bounds);
             foreach (var puerta in nivel.Puertas) objetosSolidos.Add(puerta.Imagen.Bounds);
             foreach (var npc in nivel.NPCs) objetosSolidos.Add(npc.Bounds);
             foreach (var prisionero in nivel.Prisioneros) objetosSolidos.Add(prisionero.Imagen.Bounds);
+            foreach (var pared in nivel.Paredes) objetosSolidos.Add(pared.Bounds);
+            if (nivel.Escondites != null) foreach (var escondite in nivel.Escondites) objetosSolidos.Add(escondite.Imagen.Bounds);
 
             bool chocaDer = false, chocaIzq = false;
             Rectangle futuroDer = new Rectangle(x + velocidad, y, Imagen.Width, Imagen.Height);
@@ -35,15 +35,15 @@ namespace EscapeRoom
             }
             if (moveDerecha)
             {
-                if (!chocaDer) x += velocidad;
+                if (!chocaDer && (x + velocidad + Imagen.Width) < nivel.Width) x += velocidad;
                 else moveDerecha = false;
             }
             else
             {
-                if (!chocaIzq) x -= velocidad;
+                if (!chocaIzq && (x-velocidad)>0) x -= velocidad;
                 else moveDerecha = true;
             }
-
+            Imagen.Location = new Point(x, y);
         }
     
     

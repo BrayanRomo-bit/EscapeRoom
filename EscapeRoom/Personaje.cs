@@ -10,6 +10,7 @@ namespace EscapeRoom
 {
     public class Personaje
     {
+
         protected int x;
         protected int y;
         protected int velocidad;
@@ -28,9 +29,7 @@ namespace EscapeRoom
             get { return velocidad; }
             set { velocidad = value; }
         }
-        [JsonIgnore]public PictureBox Imagen { get; set; }
-
-
+        public PictureBox Imagen { get; set; }
         public Personaje(int x, int y, int velocidad, PictureBox imagen)
         {
             this.x = x;

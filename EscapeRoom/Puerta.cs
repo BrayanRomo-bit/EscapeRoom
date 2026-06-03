@@ -6,15 +6,20 @@ using System.Threading.Tasks;
 
 namespace EscapeRoom
 {
-    public class Puerta : Objeto
+    public class Puerta 
     {
-        private bool estaAbierta;
+        public string Id { get; set; } 
+        public string Descripcion { get; set; } 
+        public PictureBox Imagen { get; set; } 
+        public bool RequiereCodigo { get; set; } = false;
+        public string Codigo { get; set; } = "";
         public bool EstaAbierta { get; set; } = false;
 
-
-        public Puerta(int x, int y, string id, string descripcion, PictureBox imagen) : base(x, y, id, descripcion, imagen)
+        public Puerta(string id, string descripcion, PictureBox imagen)
         {
-            EstaAbierta = false;
+            this.Id = id;
+            this.Descripcion = descripcion;
+            this.Imagen = imagen;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EscapeRoom.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing.Text;
 using System.Linq;
@@ -14,16 +15,19 @@ namespace EscapeRoom
         public bool Atrapado { get; set; } = false;
         public bool EstaLeyendo { get; set; } = false;
         public bool seguroSoltarTecla = false;
+        public string Nombre { get; set; }
 
 
         public Prisionero(int x, int y, int velocidad, PictureBox imagen) : base(x, y, velocidad, imagen)
         {
             Inventario = new List<Objeto>();
         }
-        public string Actualizar(bool arr, bool abj, bool izq, bool der, bool accion, NivelBase nivel)
+
+        public string ProcesarMovimiento(bool arr, bool abj, bool izq, bool der, bool accion, NivelBase nivel)
         {
             bool estoyEnPuerta = false;
             bool estoyEnNPC = false;
+            bool interactuar = false;
             bool chocaDer = false, chocaIzq = false, chocaArr = false, chocaAbj = false;
 
             Rectangle futuroDer = new Rectangle(x + velocidad, y, Imagen.Width, Imagen.Height);
@@ -31,18 +35,17 @@ namespace EscapeRoom
             Rectangle futuroArr = new Rectangle(x, y - velocidad, Imagen.Width, Imagen.Height);
             Rectangle futuroAbj = new Rectangle(x, y + velocidad, Imagen.Width, Imagen.Height);
 
-            Rectangle areaInteraccion = new Rectangle(x - 5, y - 5, Imagen.Width + 10, Imagen.Height + 10);
-
+            Rectangle areaInteraccion = new Rectangle(x - 15, y - 15, Imagen.Width + 30, Imagen.Height + 30);
             List<Rectangle> objetosSolidos = new List<Rectangle>();
 
-            foreach (var muro in nivel.Muros) objetosSolidos.Add(muro.Bounds);
             foreach (var npc in nivel.NPCs) objetosSolidos.Add(npc.Bounds);
             foreach (var guardia in nivel.Guardias) objetosSolidos.Add(guardia.Imagen.Bounds);
-
-            foreach (var puerta in nivel.Puertas)
-            {
-                if (puerta.EstaAbierta == false) objetosSolidos.Add(puerta.Imagen.Bounds);
-            }
+            foreach (var puerta in nivel.Puertas) if (puerta.EstaAbierta == false) objetosSolidos.Add(puerta.Imagen.Bounds);
+            foreach (var pared in nivel.Paredes) objetosSolidos.Add(pared.Bounds);
+            if (nivel.Escondites != null) foreach (var escondite in nivel.Escondites) objetosSolidos.Add(escondite.Imagen.Bounds);
+            if (nivel.Cofres != null) foreach (var cofre in nivel.Cofres) objetosSolidos.Add(cofre.Imagen.Bounds);
+            if (nivel.MonitorNivel != null) objetosSolidos.Add(nivel.MonitorNivel.Imagen.Bounds);
+            foreach (var camara in nivel.Camaras) if (camara.estaActiva == true) objetosSolidos.Add(camara.Imagen.Bounds);
 
             foreach (var solido in objetosSolidos)
             {
@@ -63,22 +66,20 @@ namespace EscapeRoom
                     nivel.ReiniciarNivel();
                 }
 
-                return "";
+                return "¡Te han atrapado! Presiona la tecla de acción (E) para reiniciar.";
             }
 
             if (EstaLeyendo == true)
             {
-
                 if (accion == true && seguroSoltarTecla == true)
                 {
                     EstaLeyendo = false;
-
                     seguroSoltarTecla = false;
                 }
                 return "";
             }
 
-            
+
             foreach (var npc in nivel.NPCs)
             {
                 if (areaInteraccion.IntersectsWith(npc.Bounds) && estoyEnNPC == false && accion == true && seguroSoltarTecla == true)
@@ -87,8 +88,74 @@ namespace EscapeRoom
                     estoyEnNPC = true;
                     EstaLeyendo = true;
                     seguroSoltarTecla = false;
+                    if (npc.ObjetoaDar != null && npc.YaDioObjeto == false)
+                    {
+                        Inventario.Add(npc.ObjetoaDar);
+                        npc.YaDioObjeto = true;
+                        return $"NPC: {npc.Dialogo} \n\nAdemás, te da: {npc.ObjetoaDar.Descripcion}";
+                    }
                     return $"{npc.Dialogo}";
 
+                }
+            }
+
+            foreach (var escondite in nivel.Escondites)
+            {
+                if (areaInteraccion.IntersectsWith(escondite.Imagen.Bounds) && interactuar == false && accion == true && seguroSoltarTecla == true)
+                {
+                    if (escondite.YaRevisado == true)
+                    {
+                        EstaLeyendo = true;
+                        seguroSoltarTecla = false;
+                        return $"Ya revisaste {escondite.Nombre} y no hay nada más aquí.";
+                    }
+                    escondite.YaRevisado = true;
+
+                    if (escondite.ObjetoOculto != null)
+                    {
+                        Inventario.Add(escondite.ObjetoOculto);
+                        escondite.ObjetoOculto.Recogido = true;
+
+                        EstaLeyendo = true;
+                        seguroSoltarTecla = false;
+                        return $"¡Revisas {escondite.Nombre} y encuentras algo! Recibes: {escondite.ObjetoOculto.Descripcion}";
+                    }
+                    else
+                    {
+                        EstaLeyendo = true;
+                        seguroSoltarTecla = false;
+                        return $"Revisas {escondite.Nombre}... pero solo hay polvo y telarañas.";
+                    }
+                }
+            }
+
+
+            foreach (var cofre in nivel.Cofres)
+            {
+                if (areaInteraccion.IntersectsWith(cofre.Imagen.Bounds) && interactuar == false && accion == true && seguroSoltarTecla == true)
+                {
+                    if (cofre.YaRevisado == true)
+                    {
+                        EstaLeyendo = true;
+                        seguroSoltarTecla = false;
+
+                        return $"Ya revisaste {cofre.Nombre} y no hay nada más aquí.";
+                    }
+                    cofre.YaRevisado = true;
+                    if (cofre.ObjetoOculto != null)
+                    {
+                        Inventario.Add(cofre.ObjetoOculto);
+                        cofre.ObjetoOculto.Recogido = true;
+                        EstaLeyendo = true;
+                        seguroSoltarTecla = false;
+                        return $"¡Abres {cofre.Nombre} y encuentras algo! Recibes: {cofre.ObjetoOculto.Descripcion}";
+                    }
+                    else
+                    {
+                        EstaLeyendo = true;
+                        seguroSoltarTecla = false;
+                        return $"Abres {cofre.Nombre}... pero solo hay polvo y telarañas.";
+                    }
                 }
             }
 
@@ -98,6 +165,34 @@ namespace EscapeRoom
                 {
                     bool LlaveCorrecta = false;
                     Objeto llaveUsada = null;
+
+                    if (puerta.RequiereCodigo == true)
+                    {
+                        estoyEnPuerta = true;
+                        EstaLeyendo = true;
+                        seguroSoltarTecla = false;
+
+                        nivel.PausarNivel();
+                        string respuestaJugador = Microsoft.VisualBasic.Interaction.InputBox(
+                            "La puerta tiene un teclado electrónico. Ingresa el PIN de 3 dígitos:",
+                            "Cerradura de Seguridad",
+                            "");
+                        nivel.ReanudarNivel();
+                        if (respuestaJugador == puerta.Codigo)
+                        {
+                            puerta.EstaAbierta = true;
+                            puerta.Imagen.Bounds = Rectangle.Empty;
+                            nivel.NivelSuperado = true;
+
+                            return "¡BEEP! Código aceptado. La puerta se ha abierto.";
+                        }
+                        else if (respuestaJugador != "") // Si no le dio a Cancelar
+                        {
+                            return "¡ERROR! Código incorrecto. Búscalo en las celdas.";
+                        }
+
+                        return ""; // Si le dio a cancelar, no decimos nada
+                    }
 
                     foreach (var item in Inventario)
                     {
@@ -163,9 +258,57 @@ namespace EscapeRoom
 
                 }
             }
+            foreach (var camara in nivel.Camaras)
+            {
+                if (camara.estaActiva == true && areaInteraccion.IntersectsWith(camara.Imagen.Bounds))
+                {
+                    Atrapado = true;
+                    seguroSoltarTecla = false;
+                    return $"¡Una cámara de seguridad te ha detectado!";
+                }
 
-            if (estoyEnNPC == false) nivel.LabelDialogo?.Hide();
-            if (estoyEnPuerta == false) nivel.LabelDialogo?.Hide();
+            }
+
+            if (nivel.MonitorNivel != null && areaInteraccion.IntersectsWith(nivel.MonitorNivel.Imagen.Bounds))
+            {
+                if (accion == true && seguroSoltarTecla == true)
+                {
+                    if (nivel.MonitorNivel.Desactivado == true)
+                    {
+                        EstaLeyendo = true;
+                        seguroSoltarTecla = false;
+                        return $"El monitor muestra una imagen borrosa... parece que ya lo desactivaste.";
+                    }
+                    estoyEnPuerta = true;
+                    EstaLeyendo = true;
+                    seguroSoltarTecla = false;
+                    nivel.PausarNivel();
+
+                    string respuestaJugador = Microsoft.VisualBasic.Interaction.InputBox(
+            "Terminal de Seguridad Bloqueada.\nIngresa el código PIN de 3 dígitos para apagar las cámaras:",
+            "Monitor de Cámaras", "");
+
+                    nivel.ReanudarNivel();
+                    if (respuestaJugador == nivel.MonitorNivel.Codigo)
+                    {
+                        nivel.MonitorNivel.Desactivado = true;
+
+                        foreach (var camara in nivel.Camaras)
+                        {
+                            camara.estaActiva = false;
+                            camara.Imagen.SizeMode = PictureBoxSizeMode.Zoom;
+                            camara.Imagen.Image = Properties.Resources.camara_off;
+                        }
+                        return "¡BEEP! Código aceptado. Las cámaras han sido desactivadas.";
+                    }
+                    else if (respuestaJugador != "" || respuestaJugador != nivel.MonitorNivel.Codigo)
+                    {
+                        return "¡ERROR! Código incorrecto. Búscalo en las celdas.";
+                    }
+                    return "";
+                }
+            }
+            if (estoyEnNPC == false && estoyEnPuerta == false) nivel.LabelDialogo?.Hide();
             if (der && chocaDer == false && x + Imagen.Width < nivel.Width) x += velocidad;
             if (izq && chocaIzq == false && x > 0) x -= velocidad;
             if (arr && chocaArr == false && y > 0) y -= velocidad;

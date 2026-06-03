@@ -11,6 +11,8 @@ namespace EscapeRoom
         public int Id { get; set; }
         public string Dialogo { get; set; }
         public bool YaHablo { get; set; }
+        public Objeto ObjetoaDar {  get; set; }
+        public bool YaDioObjeto { get; set; }
 
         public NPC(int id, string dialogo, Image imagen, Point posicion)
         {
