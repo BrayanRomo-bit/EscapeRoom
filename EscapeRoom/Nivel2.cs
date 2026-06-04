@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace EscapeRoom
 {
-    internal class Nivel2 : NivelBase
+    public partial class Nivel2 : NivelBase
     {
         public Nivel2()
         {

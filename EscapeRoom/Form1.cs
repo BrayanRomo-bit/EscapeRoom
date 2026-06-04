@@ -30,10 +30,7 @@ namespace EscapeRoom
 
             UCPantallaMenu menu = new UCPantallaMenu();
             menu.Dock = DockStyle.Fill;
-
-            // 1. CONECTAMOS LOS CABLES DEL MENÚ (Sin lambdas)
-            // Le decimos: "Cuando el menú lance estos eventos, ejecuta estos métodos"
-            menu.AlIniciarNuevaPartida += RecibirNuevaPartida;
+menu.AlIniciarNuevaPartida += RecibirNuevaPartida;
             menu.AlCargarPartidaExistente += RecibirCargarPartida;
 
             this.Controls.Add(menu);

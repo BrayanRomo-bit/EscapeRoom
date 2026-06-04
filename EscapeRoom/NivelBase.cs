@@ -153,6 +153,89 @@ namespace EscapeRoom
 
             return nPC;
         }
+        public void MostrarPinpadPuerta(Puerta puertaActual)
+        {
+            PausarNivel(); 
+
+            UCPinpad pinpad = new UCPinpad();
+
+            pinpad.Location = new Point((this.Width - pinpad.Width) / 2, (this.Height - pinpad.Height) / 2);
+
+            this.Controls.Add(pinpad);
+            pinpad.BringToFront();
+
+            pinpad.ConfirmarCodigo += (codigoEscrito) =>
+            {
+                this.Controls.Remove(pinpad); 
+                ReanudarNivel();
+
+                if (codigoEscrito == puertaActual.Codigo)
+                {
+                    puertaActual.EstaAbierta = true;
+                    puertaActual.Imagen.Bounds = Rectangle.Empty;
+                    this.NivelSuperado = true;
+
+                    lblDialogo.Text = Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_codigo_aceptado");
+                    lblDialogo.Show();
+                }
+                else
+                {
+                    lblDialogo.Text = Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_codigo_incorrecto");
+                    lblDialogo.Show();
+                    Prisioneros[0].EstaLeyendo = true;
+                }
+            };
+            pinpad.CancelarCodigo += () =>
+            {
+                this.Controls.Remove(pinpad);
+                ReanudarNivel();
+            };
+        }
+
+        public void MostrarPinpadMonitor()
+        {
+            PausarNivel(); 
+
+            UCPinpad pinpad = new UCPinpad();
+            pinpad.Location = new Point((this.Width - pinpad.Width) / 2, (this.Height - pinpad.Height) / 2);
+
+            this.Controls.Add(pinpad);
+            pinpad.BringToFront();
+
+            pinpad.ConfirmarCodigo += (codigoEscrito) =>
+            {
+                this.Controls.Remove(pinpad);
+                ReanudarNivel();
+
+                if (MonitorNivel != null && codigoEscrito == MonitorNivel.Codigo)
+                {
+                    MonitorNivel.Desactivado = true;
+
+                    foreach (var camara in Camaras)
+                    {
+                        camara.estaActiva = false;
+                        camara.Imagen.SizeMode = PictureBoxSizeMode.Zoom;
+                        camara.Imagen.Image = Properties.Resources.camara_off;
+                    }
+
+                    lblDialogo.Text = Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_codigo_aceptado");
+                    lblDialogo.Show();
+                }
+                else
+                {
+                    lblDialogo.Text = Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_codigo_incorrecto");
+                    lblDialogo.Show();
+                    Prisioneros[0].EstaLeyendo = true;
+                }
+            };
+
+            pinpad.CancelarCodigo += () =>
+            {
+                this.Controls.Remove(pinpad);
+                ReanudarNivel();
+            };
+        }
+
         public virtual void IniciarNivel()
         {
         }

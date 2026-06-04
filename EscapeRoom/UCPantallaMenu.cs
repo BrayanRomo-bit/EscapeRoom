@@ -49,7 +49,8 @@ namespace EscapeRoom
             btnSalir.Text = Traductor.Obtener("pantallas.UCPantallaMenu.botones.btnSalir");
             btnConfirmarCarga.Text = Traductor.Obtener("pantallas.UCPantallaMenu.botones.btnConfirmarCarga");
             btnAceptarNombr.Text = Traductor.Obtener("pantallas.UCPantallaMenu.botones.btnAceptarNombr");
-
+            btnRegresarNombre.Text = Traductor.Obtener("pantallas.UCPantallaMenu.botones.btnRegresar");
+            btnRegresarCargar.Text = Traductor.Obtener("pantallas.UCPantallaMenu.botones.btnRegresar");
             if (Traductor.IdiomaActual == "es")
             {
                 btnIdioma.Text = "Idioma: ESP";
@@ -63,7 +64,6 @@ namespace EscapeRoom
         private void BtnNuevaPartida_Click(object sender, EventArgs e)
         {
             panelcargar.Visible = false;
-            panelnombre.BringToFront();
             panelnombre.Visible = true;
             panelnombre.Enabled = true;
         }
@@ -111,18 +111,6 @@ namespace EscapeRoom
             Application.Exit();
         }
 
-        private void btnAceptarNombr_Click(object sender, EventArgs e)
-        {
-            string nombre = txtNombreUsuario.Text;
-
-            if (string.IsNullOrWhiteSpace(nombre))
-            {
-                MessageBox.Show(Traductor.Obtener("pantallas.UCPantallaMenu.messageboxes.nombre_vacio"));
-                return;
-            }
-
-            AlIniciarNuevaPartida?.Invoke(nombre);
-        }
 
         private void panelcargar_Paint(object sender, PaintEventArgs e)
         {
@@ -148,15 +136,6 @@ namespace EscapeRoom
             }
         }
 
-        private void panelnombre_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void txtNombreUsuario_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void ResaltarBotonActual()
         {
@@ -218,6 +197,34 @@ namespace EscapeRoom
                 Traductor.CargarIdioma("es");
             }
             ActualizarTextosMenu();
+        }
+        private void btnRegresarCargar_Click(object sender, EventArgs e)
+        {
+            panelcargar.Visible = false;
+
+            this.Focus();
+        }
+
+        private void btnAceptarNombr_Click(object sender, EventArgs e)
+        {
+
+            string nombre = txtNombreUsuario.Text;
+
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                MessageBox.Show(Traductor.Obtener("pantallas.UCPantallaMenu.messageboxes.nombre_vacio"));
+                return;
+            }
+
+            AlIniciarNuevaPartida?.Invoke(nombre);
+        }
+
+        private void btnRegresarNombre_Click(object sender, EventArgs e)
+        {
+
+            panelnombre.Visible = false;
+
+            this.Focus();
         }
     }
 }

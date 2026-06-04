@@ -119,6 +119,7 @@ namespace EscapeRoom
                 }
                 return "";
             }
+
             foreach (var npc in nivel.NPCs)
             {
                 if (areaInteraccion.IntersectsWith(npc.Bounds) && accion == true && seguroSoltarTecla == true)
@@ -206,31 +207,15 @@ namespace EscapeRoom
 
                     if (puerta.RequiereCodigo == true)
                     {
+                        // AQUÍ ENTRA EN ACCIÓN TU NUEVO CONTROL DE USUARIO (UCPinpad)
                         estoyEnPuerta = true;
                         EstaLeyendo = true;
                         seguroSoltarTecla = false;
 
-                        nivel.PausarNivel();
-                        string respuestaJugador = Microsoft.VisualBasic.Interaction.InputBox(
-                            Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_pin_prompt"),
-                            Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_pin_titulo"),
-                            "");
-                        nivel.ReanudarNivel();
+                        // Mandamos llamar a nuestro método de NivelBase que crea el UCPinpad
+                        nivel.MostrarPinpadPuerta(puerta);
 
-                        if (respuestaJugador == puerta.Codigo)
-                        {
-                            puerta.EstaAbierta = true;
-                            puerta.Imagen.Bounds = Rectangle.Empty;
-                            nivel.NivelSuperado = true;
-
-                            return Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_codigo_aceptado");
-                        }
-                        else if (respuestaJugador != "") // Si no le dio a Cancelar
-                        {
-                            return Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_codigo_incorrecto");
-                        }
-
-                        return ""; // Si le dio a cancelar, no decimos nada
+                        return ""; // Retornamos vacío, la puerta se abrirá desde NivelBase
                     }
 
                     foreach (var item in Inventario)
@@ -300,6 +285,7 @@ namespace EscapeRoom
 
                 }
             }
+
             foreach (var camara in nivel.Camaras)
             {
                 if (camara.estaActiva == true && areaInteraccion.IntersectsWith(camara.Imagen.Bounds))
@@ -321,36 +307,16 @@ namespace EscapeRoom
                         seguroSoltarTecla = false;
                         return Traductor.Obtener("mensajes_juego.prisionero.monitor_ya_desactivado");
                     }
+
                     estoyEnPuerta = true;
                     EstaLeyendo = true;
                     seguroSoltarTecla = false;
-                    nivel.PausarNivel();
 
-                    string respuestaJugador = Microsoft.VisualBasic.Interaction.InputBox(
-            Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_pin_prompt"),
-            Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_pin_titulo"), "");
+                    nivel.MostrarPinpadMonitor();
 
-                    nivel.ReanudarNivel();
-                    if (respuestaJugador == nivel.MonitorNivel.Codigo)
-                    {
-                        nivel.MonitorNivel.Desactivado = true;
-
-                        foreach (var camara in nivel.Camaras)
-                        {
-                            camara.estaActiva = false;
-                            camara.Imagen.SizeMode = PictureBoxSizeMode.Zoom;
-                            camara.Imagen.Image = Properties.Resources.camara_off;
-                        }
-                        return Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_codigo_aceptado");
-                    }
-                    else if (respuestaJugador != "" || respuestaJugador != nivel.MonitorNivel.Codigo)
-                    {
-                        return Traductor.Obtener("mensajes_juego.terminal_seguridad.camara_codigo_incorrecto");
-                    }
                     return "";
                 }
             }
-
 
             if (estoyEnNPC == false && estoyEnPuerta == false && EstaLeyendo == false && NPCconversando == null)
             {

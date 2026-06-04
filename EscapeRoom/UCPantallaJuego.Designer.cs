@@ -39,7 +39,6 @@
             timerjuego = new System.Windows.Forms.Timer(components);
             PanelJuego = new Panel();
             PanelMenuJuego.SuspendLayout();
-            PanelJuego.SuspendLayout();
             SuspendLayout();
             // 
             // PanelMenuJuego
@@ -50,6 +49,7 @@
             PanelMenuJuego.Controls.Add(btncargar);
             PanelMenuJuego.Controls.Add(btnSaliraMenu);
             PanelMenuJuego.Controls.Add(btnGuadarPartida);
+            PanelMenuJuego.ForeColor = Color.Black;
             PanelMenuJuego.Location = new Point(217, 130);
             PanelMenuJuego.Name = "PanelMenuJuego";
             PanelMenuJuego.Size = new Size(367, 341);
@@ -109,7 +109,7 @@
             // 
             // btnPausaJuego
             // 
-            btnPausaJuego.Location = new Point(677, 43);
+            btnPausaJuego.Location = new Point(0, 0);
             btnPausaJuego.Name = "btnPausaJuego";
             btnPausaJuego.Size = new Size(75, 34);
             btnPausaJuego.TabIndex = 8;
@@ -126,8 +126,7 @@
             // PanelJuego
             // 
             PanelJuego.BackColor = Color.Black;
-            PanelJuego.Controls.Add(btnPausaJuego);
-            PanelJuego.Location = new Point(-2, 0);
+            PanelJuego.Location = new Point(0, 0);
             PanelJuego.Name = "PanelJuego";
             PanelJuego.Size = new Size(800, 700);
             PanelJuego.TabIndex = 10;
@@ -139,12 +138,12 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GrayText;
             Controls.Add(PanelMenuJuego);
+            Controls.Add(btnPausaJuego);
             Controls.Add(PanelJuego);
             Name = "UCPantallaJuego";
             Size = new Size(800, 600);
             Load += UCPantallaJuego_Load;
             PanelMenuJuego.ResumeLayout(false);
-            PanelJuego.ResumeLayout(false);
             ResumeLayout(false);
         }
 

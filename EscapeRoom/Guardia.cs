@@ -1,51 +1,99 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace EscapeRoom
 {
     public class Guardia : Personaje
     {
-        public bool moveDerecha = true;
         public string Dialogo { get; set; }
-        public Guardia(int x, int y, int velocidad, PictureBox imagen, string dialogo) : base(x, y, velocidad, imagen)
+
+        public bool MoviendoDerecha { get; set; } = true;
+
+        public Guardia(int x, int y, int velocidad, PictureBox imagen, string dialogo)
+            : base(x, y, velocidad, imagen)
         {
             this.Dialogo = dialogo;
 
+            if (this.Imagen != null)
+            {
+                this.Imagen.Image = Properties.Resources.guardiader;
+            }
         }
+
         public void Actualizar(bool arr, bool abj, bool izq, bool der, bool accion, NivelBase nivel)
         {
-            List<Rectangle> objetosSolidos = new List<Rectangle>();
-            foreach (var puerta in nivel.Puertas) objetosSolidos.Add(puerta.Imagen.Bounds);
-            foreach (var npc in nivel.NPCs) objetosSolidos.Add(npc.Bounds);
-            foreach (var prisionero in nivel.Prisioneros) objetosSolidos.Add(prisionero.Imagen.Bounds);
-            if (nivel.ParedesMatematicas != null) foreach (var pared in nivel.ParedesMatematicas) objetosSolidos.Add(pared);
-            if (nivel.Escondites != null) foreach (var escondite in nivel.Escondites) objetosSolidos.Add(escondite.Imagen.Bounds);
+            bool choca = false;
+            
+            Rectangle futuro = MoviendoDerecha ?
+                new Rectangle(x + velocidad, y, Imagen.Width, Imagen.Height) :
+                new Rectangle(x - velocidad, y, Imagen.Width, Imagen.Height);
 
-            bool chocaDer = false, chocaIzq = false;
-            Rectangle futuroDer = new Rectangle(x + velocidad, y, Imagen.Width, Imagen.Height);
-            Rectangle futuroIzq = new Rectangle(x - velocidad, y, Imagen.Width, Imagen.Height);
-        
-            foreach (var obj in objetosSolidos)
+            if (nivel.ParedesMatematicas != null)
             {
-                if (futuroDer.IntersectsWith(obj)) chocaDer = true;
-                if (futuroIzq.IntersectsWith(obj)) chocaIzq = true;
+                foreach (var pared in nivel.ParedesMatematicas)
+                {
+                    if (futuro.IntersectsWith(pared))
+                    {
+                        choca = true;
+                        break;
+                    }
+                }
             }
-            if (moveDerecha)
+
+            if (nivel.Puertas != null && !choca)
             {
-                if (!chocaDer && (x + velocidad + Imagen.Width) < nivel.Width) x += velocidad;
-                else moveDerecha = false;
+                foreach (var puerta in nivel.Puertas)
+                {
+                    if (puerta.EstaAbierta == false && futuro.IntersectsWith(puerta.Imagen.Bounds))
+                    {
+                        choca = true;
+                        break;
+                    }
+                }
+            }
+
+            if (nivel.Escondites != null && !choca)
+            {
+                foreach (var escondite in nivel.Escondites)
+                {
+                    if (futuro.IntersectsWith(escondite.Imagen.Bounds))
+                    {
+                        choca = true;
+                        break;
+                    }
+                }
+            }
+
+            if (nivel.EsconditeCod != null && !choca)
+            {
+                foreach (var cofre in nivel.EsconditeCod)
+                {
+                    if (futuro.IntersectsWith(cofre.Imagen.Bounds))
+                    {
+                        choca = true;
+                        break;
+                    }
+                }
+            }
+
+            if (MoviendoDerecha && x + Imagen.Width + velocidad > nivel.Width) choca = true;
+            if (!MoviendoDerecha && x - velocidad < 0) choca = true;
+
+            if (choca)
+            {
+                MoviendoDerecha = !MoviendoDerecha;
+            }
+
+            if (MoviendoDerecha)
+            {
+                x += velocidad;
+                this.Imagen.Image = Properties.Resources.guardiader;
             }
             else
             {
-                if (!chocaIzq && (x-velocidad)>0) x -= velocidad;
-                else moveDerecha = true;
+                x -= velocidad;
+                this.Imagen.Image = Properties.Resources.guardiaizq;
             }
-            Imagen.Location = new Point(x, y);
         }
-    
-    
     }
 }

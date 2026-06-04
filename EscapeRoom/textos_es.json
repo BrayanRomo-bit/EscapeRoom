@@ -16,7 +16,8 @@
         "btnCargarPartida": "Cargar Partida",
         "btnSalir": "Salir del Juego",
         "btnConfirmarCarga": "Confirmar",
-        "btnAceptarNombr": "Aceptar"
+        "btnAceptarNombr": "Aceptar",
+        "btnRegresar": "Regresar"
       },
       "controles": {
         "txtNombreUsuario": "(cuadro de texto — nombre del jugador)",

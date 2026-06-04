@@ -43,7 +43,8 @@
         "btnGuadarPartida": "Save Game",
         "btncargar": "Load Game",
         "btnInventario": "Show Inventory",
-        "btnSaliraMenu": "Exit"
+        "btnSaliraMenu": "Exit",
+        "btnRegresar": "Back"
       },
       "messageboxes": {
         "juego_guardado": "Game saved successfully as: {0}",

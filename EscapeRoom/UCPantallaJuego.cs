@@ -78,7 +78,8 @@ namespace EscapeRoom
                 ResaltarBotonActual();
                 return true;
             }
-            else if (keyData == Keys.Space)
+            // Modificación: Ahora se usa la tecla E para hacer clic en el menú
+            else if (keyData == Keys.E)
             {
                 botonesNavegacion[indiceSeleccionado].PerformClick();
                 return true;
@@ -89,7 +90,7 @@ namespace EscapeRoom
 
         private void UCPantallaJuego_Load(object sender, EventArgs e)
         {
-            ActualizarTextosMenu();
+            if (!this.DesignMode) ActualizarTextosMenu();
             this.Focus();
         }
 
@@ -104,8 +105,10 @@ namespace EscapeRoom
 
         private void btnPausaJuego_Click(object sender, EventArgs e)
         {
-            PanelMenuJuego.Visible = true;
+
             timerjuego.Stop();
+            PanelMenuJuego.Visible = true;
+            PanelMenuJuego.BringToFront();
         }
 
         private void btnReanudar_Click(object sender, EventArgs e)
@@ -268,7 +271,7 @@ namespace EscapeRoom
             {
                 nivel.EstaEnCinematica = true;
 
-              prisionero.Imagen.Visible = false;
+                prisionero.Imagen.Visible = false;
 
                 return;
             }
@@ -282,10 +285,12 @@ namespace EscapeRoom
             if (presionaE && !accionBloqueada) { accion = true; accionBloqueada = true; }
             else if (!presionaE) { accion = false; accionBloqueada = false; }
 
-            if ((GetAsyncKeyState(Keys.I) < 0) || (GetAsyncKeyState(Keys.Enter) < 0))
+            // Modificación: Ahora solo se usa la tecla Espacio para pausar el juego
+            if (GetAsyncKeyState(Keys.Space) < 0)
             {
                 PanelMenuJuego.Visible = true;
                 timerjuego.Stop();
+                PanelMenuJuego.BringToFront();
                 return;
             }
 
@@ -366,6 +371,7 @@ namespace EscapeRoom
             this.prisionero.Nombre = nombreJugador;
 
             btnPausaJuego.Visible = true;
+            btnPausaJuego.BringToFront();
             timerjuego.Start();
             this.Focus();
         }
