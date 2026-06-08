@@ -14,6 +14,8 @@
       "botones": {
         "BtnNuevaPartida": "Nueva Partida",
         "btnCargarPartida": "Cargar Partida",
+        "btnTutorial": "Cómo Jugar (Tutorial)",
+        "btnCerrar": "Cerrar",
         "btnSalir": "Salir del Juego",
         "btnConfirmarCarga": "Confirmar",
         "btnAceptarNombr": "Aceptar",
@@ -22,7 +24,8 @@
       "controles": {
         "txtNombreUsuario": "(cuadro de texto — nombre del jugador)",
         "partidascargadas": "(lista desplegable — partidas guardadas)",
-        "listBox1": "(lista — partidas guardadas)"
+        "listBox1": "(lista — partidas guardadas)",
+        "lblCrearPartida": "Escribe el nombre de tu prisionero para iniciar una nueva partida:"
       },
       "paneles": {
         "panelnombre": "Panel para ingresar nombre del prisionero",
@@ -177,26 +180,31 @@
           "pbsalida": "Salida Principal"
         }
       },
+      "notas": {
+        "nota_basura": {
+          "descripcion": "Revisé la ruta de los guardias. El camión de la basura tiene programada su llegada al patio a las {0} en punto. No pierdas tu oportunidad."
+        }
+      },
       "llaves": {
         "llave1": {
           "id": "llave1",
-          "descripcion": "de una celda"
+          "descripcion": "llave de una celda"
         },
         "llave2": {
           "id": "llave2",
-          "descripcion": "de una celda"
+          "descripcion": "llave de una celda"
         },
         "llave3": {
           "id": "llave3",
-          "descripcion": "de una celda"
+          "descripcion": "llave de una celda"
         },
         "llave4": {
           "id": "llave4",
-          "descripcion": "de la Sala de Seguridad.\n\n[Nota arrugada adjunta: 'El camión de traslado llegará a las {0}'].\nMario se plantea secuestrar ese camión para escapar."
+          "descripcion": "llave de la Sala de Seguridad"
         },
         "llaveSalida": {
           "id": "llaveSalida",
-          "descripcion": "de la Salida Principal"
+          "descripcion": "llave de la Salida Principal"
         }
       },
       "puertas": {
@@ -234,7 +242,7 @@
         "cama": "la Cama",
         "cofre": "el Cofre"
       },
-      "dialogo_planos": "[Mario observa unos planos sobre el escritorio. En ellos descubre que la llave de salida está restringida y fuertemente oculta en un cuarto vigilado por una cámara]."
+      "dialogo_planos": "Hay unos planos sobre el escritorio. la llave de salida está restringida y fuertemente oculta en un cuarto vigilado por una cámara."
     },
 
     "Nivel3": {
@@ -259,6 +267,11 @@
   },
 
   "mensajes_juego": {
+    "tutorial": {
+      "titulo": "Tutorial - Instrucciones de Fuga",
+      "historia": "Eres un prisionero buscando escapar de una instalación de máxima seguridad. Tu misión es explorar las celdas, buscar pistas en escondites y evitar la mirada de los guardias y cámaras.",
+      "controles": "CONTROLES BÁSICOS:\n\n• Flechas del teclado o W,A,S,D: Caminar\n• Tecla E: Interactuar, leer notas y recoger objetos\n• Tecla Espacio: Pausar el juego"
+    },
     "prisionero": {
       "atrapado": "¡Te han atrapado! Presiona la tecla de acción (E) para reiniciar.",
       "objeto_recibido": "\n\n[Recibiste: {0}]",

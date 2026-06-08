@@ -14,14 +14,18 @@
       "botones": {
         "BtnNuevaPartida": "New Game",
         "btnCargarPartida": "Load Game",
+        "btnTutorial": "How to Play (Tutorial)",
+        "btnCerrar": "Close",
         "btnSalir": "Exit Game",
         "btnConfirmarCarga": "Confirm",
-        "btnAceptarNombr": "OK"
+        "btnAceptarNombr": "OK",
+        "btnRegresar": "Back"
       },
       "controles": {
         "txtNombreUsuario": "(player name text box)",
         "partidascargadas": "(saved games dropdown)",
-        "listBox1": "(saved games list)"
+        "listBox1": "(saved games list)",
+        "lblCrearPartida": "Enter your prisoner's name to start a new game:"
       },
       "paneles": {
         "panelnombre": "Enter your name panel",
@@ -43,8 +47,7 @@
         "btnGuadarPartida": "Save Game",
         "btncargar": "Load Game",
         "btnInventario": "Show Inventory",
-        "btnSaliraMenu": "Exit",
-        "btnRegresar": "Back"
+        "btnSaliraMenu": "Exit"
       },
       "messageboxes": {
         "juego_guardado": "Game saved successfully as: {0}",
@@ -177,26 +180,31 @@
           "pbsalida": "Main Exit"
         }
       },
+      "notas": {
+        "nota_basura": {
+          "descripcion": "I checked the guards' route. The garbage truck is scheduled to arrive at the yard at {0} o'clock. Don't miss your chance."
+        }
+      },
       "llaves": {
         "llave1": {
           "id": "llave1",
-          "descripcion": "of a cell"
+          "descripcion": "cell key"
         },
         "llave2": {
           "id": "llave2",
-          "descripcion": "of a cell"
+          "descripcion": "cell key"
         },
         "llave3": {
           "id": "llave3",
-          "descripcion": "of a cell"
+          "descripcion": "cell key"
         },
         "llave4": {
           "id": "llave4",
-          "descripcion": "of the Security Room.\n\n[Attached crumpled note: 'The transfer truck will arrive at {0}'].\nMario considers hijacking that truck to escape."
+          "descripcion": "Security Room key"
         },
         "llaveSalida": {
           "id": "llaveSalida",
-          "descripcion": "of the Main Exit"
+          "descripcion": "Main Exit key"
         }
       },
       "puertas": {
@@ -234,7 +242,7 @@
         "cama": "the Bed",
         "cofre": "the Chest"
       },
-      "dialogo_planos": "[Mario examines some blueprints on the desk. He discovers that the exit key is restricted and heavily hidden in a room watched by a security camera]."
+      "dialogo_planos": "There are some blueprints on the desk. The exit key is restricted and heavily hidden in a room watched by a security camera."
     },
 
     "Nivel3": {
@@ -259,6 +267,11 @@
   },
 
   "mensajes_juego": {
+    "tutorial": {
+      "titulo": "Tutorial - Escape Instructions",
+      "historia": "You are a prisoner trying to break out of a maximum-security facility. Your mission is to explore cells, search hideouts for clues, and avoid guards and cameras.",
+      "controles": "BASIC CONTROLS:\n\n• Arrow keys or W,A,S,D: Move\n• E key: Interact, read notes, and pick up items\n• Space key: Pause the game"
+    },
     "prisionero": {
       "atrapado": "You've been caught! Press the action key (E) to restart.",
       "objeto_recibido": "\n\n[You received: {0}]",
