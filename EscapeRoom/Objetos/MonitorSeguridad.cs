@@ -17,5 +17,14 @@ namespace EscapeRoom.Objetos
             this.Imagen = imagen;
             this.Codigo = codigo;
         }
+        public string IntentarDesactivar()
+        {
+            if (this.Desactivado == true)
+            {
+                return Traductor.Obtener("mensajes_juego.prisionero.monitor_ya_desactivado");
+            }
+
+            return "PINPAD_MONITOR";
+        }
     }
 }

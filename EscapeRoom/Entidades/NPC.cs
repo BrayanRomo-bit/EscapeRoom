@@ -1,4 +1,5 @@
 ﻿using EscapeRoom.Objetos;
+using EscapeRoom.Personajes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace EscapeRoom.Entidades
 
         public int PaginaActual { get; set; } = 0;
 
-        public NPC(int id,  Image imagen, Point posicion)
+        public NPC(int id, Image imagen, Point posicion)
         {
             this.Id = id;
             this.Image = imagen;
@@ -28,18 +29,41 @@ namespace EscapeRoom.Entidades
             this.YaHablo = false;
             this.BackColor = Color.Transparent;
         }
-        public string Hablar()
+        public string Hablar(Prisionero jugador)
         {
-            if (DialogosPorPasos.Count == 0) return "";
+            if (this.DialogosPorPasos == null || DialogosPorPasos.Count == 0) return EntregarObjetoFinal(jugador, this.Dialogo);
 
-            string textoActual = DialogosPorPasos[PaginaActual];
-            if (PaginaActual < DialogosPorPasos.Count - 1)
+            string textoActual = this.DialogosPorPasos[this.PaginaActual];
+
+            if (PaginaActual >= DialogosPorPasos.Count - 1)
             {
-                PaginaActual++;
+                return EntregarObjetoFinal(jugador, textoActual);
             }
             return textoActual;
         }
 
+        public void AvanzarPagina()
+        {
+            if (this.DialogosPorPasos != null && this.PaginaActual < this.DialogosPorPasos.Count - 1)
+            {
+                this.PaginaActual++;
+            }
+        }
+        public bool EsUltimaPagina()
+        {
+            if (this.DialogosPorPasos == null || this.DialogosPorPasos.Count == 0) return true;
+            return this.PaginaActual >= this.DialogosPorPasos.Count - 1;
+        }
 
+        public string EntregarObjetoFinal(Prisionero jugador, string textoBase)
+        {
+            if (this.ObjetoaDar != null && this.YaDioObjeto == false)
+            { 
+            jugador.Inventario.Add(this.ObjetoaDar);
+                this.YaDioObjeto = true;
+                return textoBase + Traductor.Obtener("mensajes_juego.prisionero.objeto_recibido", this.ObjetoaDar.Descripcion);
+            }
+            return textoBase;
+        }
     }
 }

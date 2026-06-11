@@ -163,7 +163,7 @@
             pbcofre.Location = new Point(336, 153);
             pbcofre.Name = "pbcofre";
             pbcofre.Size = new Size(75, 50);
-            pbcofre.SizeMode = PictureBoxSizeMode.Zoom;
+            pbcofre.SizeMode = PictureBoxSizeMode.StretchImage;
             pbcofre.TabIndex = 22;
             pbcofre.TabStop = false;
             // 
@@ -173,7 +173,7 @@
             pbcofre2.Location = new Point(242, 456);
             pbcofre2.Name = "pbcofre2";
             pbcofre2.Size = new Size(75, 50);
-            pbcofre2.SizeMode = PictureBoxSizeMode.Zoom;
+            pbcofre2.SizeMode = PictureBoxSizeMode.StretchImage;
             pbcofre2.TabIndex = 23;
             pbcofre2.TabStop = false;
             // 
@@ -183,7 +183,7 @@
             pbcofre3.Location = new Point(568, 456);
             pbcofre3.Name = "pbcofre3";
             pbcofre3.Size = new Size(75, 50);
-            pbcofre3.SizeMode = PictureBoxSizeMode.Zoom;
+            pbcofre3.SizeMode = PictureBoxSizeMode.StretchImage;
             pbcofre3.TabIndex = 24;
             pbcofre3.TabStop = false;
             // 

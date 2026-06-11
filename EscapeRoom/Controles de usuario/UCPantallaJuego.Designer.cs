@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UCPantallaJuego));
             PanelMenuJuego = new Panel();
             btnReanudar = new Button();
             btnInventario = new Button();
@@ -37,8 +38,21 @@
             btnGuadarPartida = new Button();
             btnPausaJuego = new Button();
             timerjuego = new System.Windows.Forms.Timer(components);
+            pnlInventario = new Panel();
+            button1 = new Button();
+            flpItems = new FlowLayoutPanel();
             PanelJuego = new Panel();
+            lblPuntaje = new Label();
+            pnlVictoria = new Panel();
+            btnSalirVictoria = new Button();
+            lblNuevoRecord = new Label();
+            lblRecord = new Label();
+            lblPuntosFinales = new Label();
+            lblVictoriaTitulo = new Label();
             PanelMenuJuego.SuspendLayout();
+            pnlInventario.SuspendLayout();
+            PanelJuego.SuspendLayout();
+            pnlVictoria.SuspendLayout();
             SuspendLayout();
             // 
             // PanelMenuJuego
@@ -109,9 +123,9 @@
             // 
             // btnPausaJuego
             // 
-            btnPausaJuego.Location = new Point(0, 0);
+            btnPausaJuego.Location = new Point(643, 15);
             btnPausaJuego.Name = "btnPausaJuego";
-            btnPausaJuego.Size = new Size(75, 34);
+            btnPausaJuego.Size = new Size(116, 35);
             btnPausaJuego.TabIndex = 8;
             btnPausaJuego.Text = "Pausa";
             btnPausaJuego.UseVisualStyleBackColor = true;
@@ -123,28 +137,158 @@
             timerjuego.Interval = 20;
             timerjuego.Tick += timerjuego_Tick;
             // 
+            // pnlInventario
+            // 
+            pnlInventario.AutoScroll = true;
+            pnlInventario.BackColor = Color.DarkGray;
+            pnlInventario.BackgroundImage = (Image)resources.GetObject("pnlInventario.BackgroundImage");
+            pnlInventario.BackgroundImageLayout = ImageLayout.Zoom;
+            pnlInventario.Controls.Add(button1);
+            pnlInventario.Controls.Add(flpItems);
+            pnlInventario.Location = new Point(169, 70);
+            pnlInventario.Name = "pnlInventario";
+            pnlInventario.Size = new Size(400, 300);
+            pnlInventario.TabIndex = 0;
+            pnlInventario.Visible = false;
+            // 
+            // button1
+            // 
+            button1.BackColor = Color.Red;
+            button1.FlatStyle = FlatStyle.Popup;
+            button1.Location = new Point(279, 7);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 1;
+            button1.Text = "X";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
+            // 
+            // flpItems
+            // 
+            flpItems.BackColor = Color.Transparent;
+            flpItems.BackgroundImageLayout = ImageLayout.Stretch;
+            flpItems.Location = new Point(97, 76);
+            flpItems.Name = "flpItems";
+            flpItems.Size = new Size(207, 147);
+            flpItems.TabIndex = 0;
+            flpItems.Visible = false;
+            // 
             // PanelJuego
             // 
             PanelJuego.BackColor = Color.Black;
+            PanelJuego.Controls.Add(btnPausaJuego);
             PanelJuego.Location = new Point(0, 0);
             PanelJuego.Name = "PanelJuego";
             PanelJuego.Size = new Size(800, 700);
             PanelJuego.TabIndex = 10;
             PanelJuego.Paint += PanelJuego_Paint;
             // 
+            // lblPuntaje
+            // 
+            lblPuntaje.AutoSize = true;
+            lblPuntaje.BackColor = Color.Transparent;
+            lblPuntaje.ForeColor = Color.Yellow;
+            lblPuntaje.Location = new Point(0, 0);
+            lblPuntaje.Name = "lblPuntaje";
+            lblPuntaje.Size = new Size(17, 20);
+            lblPuntaje.TabIndex = 0;
+            lblPuntaje.Text = "0";
+            // 
+            // pnlVictoria
+            // 
+            pnlVictoria.BackColor = SystemColors.Desktop;
+            pnlVictoria.Controls.Add(btnSalirVictoria);
+            pnlVictoria.Controls.Add(lblNuevoRecord);
+            pnlVictoria.Controls.Add(lblRecord);
+            pnlVictoria.Controls.Add(lblPuntosFinales);
+            pnlVictoria.Controls.Add(lblVictoriaTitulo);
+            pnlVictoria.Dock = DockStyle.Fill;
+            pnlVictoria.Location = new Point(0, 0);
+            pnlVictoria.Name = "pnlVictoria";
+            pnlVictoria.Size = new Size(800, 600);
+            pnlVictoria.TabIndex = 9;
+            pnlVictoria.Visible = false;
+            pnlVictoria.Paint += pnlVictoria_Paint_1;
+            // 
+            // btnSalirVictoria
+            // 
+            btnSalirVictoria.FlatStyle = FlatStyle.Popup;
+            btnSalirVictoria.ForeColor = Color.White;
+            btnSalirVictoria.Location = new Point(227, 382);
+            btnSalirVictoria.Name = "btnSalirVictoria";
+            btnSalirVictoria.Size = new Size(246, 55);
+            btnSalirVictoria.TabIndex = 4;
+            btnSalirVictoria.Text = "....";
+            btnSalirVictoria.UseCompatibleTextRendering = true;
+            btnSalirVictoria.UseVisualStyleBackColor = true;
+            btnSalirVictoria.Click += btnSalirVictoria_Click;
+            // 
+            // lblNuevoRecord
+            // 
+            lblNuevoRecord.AutoSize = true;
+            lblNuevoRecord.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblNuevoRecord.ForeColor = Color.Gold;
+            lblNuevoRecord.Location = new Point(259, 197);
+            lblNuevoRecord.Name = "lblNuevoRecord";
+            lblNuevoRecord.Size = new Size(200, 38);
+            lblNuevoRecord.TabIndex = 3;
+            lblNuevoRecord.Text = "Nuevo Record";
+            lblNuevoRecord.Visible = false;
+            // 
+            // lblRecord
+            // 
+            lblRecord.AutoSize = true;
+            lblRecord.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblRecord.ForeColor = Color.Red;
+            lblRecord.Location = new Point(259, 281);
+            lblRecord.Name = "lblRecord";
+            lblRecord.Size = new Size(202, 38);
+            lblRecord.TabIndex = 2;
+            lblRecord.Text = "Record Actual";
+            // 
+            // lblPuntosFinales
+            // 
+            lblPuntosFinales.AutoSize = true;
+            lblPuntosFinales.Font = new Font("Unispace", 16.1999989F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblPuntosFinales.ForeColor = Color.White;
+            lblPuntosFinales.Location = new Point(259, 102);
+            lblPuntosFinales.Name = "lblPuntosFinales";
+            lblPuntosFinales.Size = new Size(111, 33);
+            lblPuntosFinales.TabIndex = 1;
+            lblPuntosFinales.Text = "label1";
+            // 
+            // lblVictoriaTitulo
+            // 
+            lblVictoriaTitulo.Font = new Font("Impact", 18F, FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblVictoriaTitulo.ForeColor = Color.Red;
+            lblVictoriaTitulo.Location = new Point(23, 15);
+            lblVictoriaTitulo.Name = "lblVictoriaTitulo";
+            lblVictoriaTitulo.Size = new Size(736, 74);
+            lblVictoriaTitulo.TabIndex = 0;
+            lblVictoriaTitulo.Text = "label1";
+            lblVictoriaTitulo.TextAlign = ContentAlignment.MiddleCenter;
+            lblVictoriaTitulo.Click += lblVictoriaTitulo_Click;
+            // 
             // UCPantallaJuego
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GrayText;
+            Controls.Add(lblPuntaje);
             Controls.Add(PanelMenuJuego);
-            Controls.Add(btnPausaJuego);
+            Controls.Add(pnlInventario);
             Controls.Add(PanelJuego);
+            Controls.Add(pnlVictoria);
             Name = "UCPantallaJuego";
             Size = new Size(800, 600);
             Load += UCPantallaJuego_Load;
             PanelMenuJuego.ResumeLayout(false);
+            pnlInventario.ResumeLayout(false);
+            PanelJuego.ResumeLayout(false);
+            pnlVictoria.ResumeLayout(false);
+            pnlVictoria.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -157,6 +301,16 @@
         private Button btnGuadarPartida;
         private Button btnPausaJuego;
         private System.Windows.Forms.Timer timerjuego;
+        private Panel pnlInventario;
         private Panel PanelJuego;
+        private Button button1;
+        private FlowLayoutPanel flpItems;
+        private Label lblPuntaje;
+        private Panel pnlVictoria;
+        private Label lblPuntosFinales;
+        private Label lblVictoriaTitulo;
+        private Label lblRecord;
+        private Label lblNuevoRecord;
+        private Button btnSalirVictoria;
     }
 }

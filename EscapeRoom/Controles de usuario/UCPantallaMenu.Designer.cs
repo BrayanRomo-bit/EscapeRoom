@@ -133,7 +133,7 @@
             // 
             // panelnombre
             // 
-            panelnombre.BackColor = Color.MidnightBlue;
+            panelnombre.BackColor = Color.MediumBlue;
             panelnombre.BackgroundImageLayout = ImageLayout.Stretch;
             panelnombre.BorderStyle = BorderStyle.Fixed3D;
             panelnombre.Controls.Add(lblCrearPartida);
@@ -150,6 +150,7 @@
             // 
             lblCrearPartida.AutoSize = true;
             lblCrearPartida.Font = new Font("Segoe UI", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblCrearPartida.ForeColor = Color.Yellow;
             lblCrearPartida.ImageAlign = ContentAlignment.BottomCenter;
             lblCrearPartida.Location = new Point(3, 28);
             lblCrearPartida.Name = "lblCrearPartida";
@@ -260,12 +261,12 @@
             BackColor = SystemColors.ActiveCaption;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            Controls.Add(pnlTutorial);
             Controls.Add(btnSalir);
             Controls.Add(btnIdioma);
             Controls.Add(btnCargarPartida);
             Controls.Add(btnTutorial);
             Controls.Add(BtnNuevaPartida);
+            Controls.Add(pnlTutorial);
             Controls.Add(panelnombre);
             Controls.Add(panelcargar);
             DoubleBuffered = true;

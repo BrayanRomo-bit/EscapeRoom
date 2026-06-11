@@ -75,7 +75,7 @@ namespace EscapeRoom.NIveles
         {
             if (prisionero == null) return "";
 
-            string mensaje = prisionero.ProcesarMovimiento(arr, abj, izq, der, accion, this);
+            string mensaje = prisionero.ActualizarEstado(arr, abj, izq, der, accion, this);
 
             if (mensaje != "")
             {
@@ -97,15 +97,6 @@ namespace EscapeRoom.NIveles
                 }
             }
 
-            for (int i = listaLlaves.Count - 1; i >= 0; i--)
-            {
-                if (listaLlaves[i].Recogido == true)
-                {
-                    this.Controls.Remove(listaLlaves[i].Imagen);
-                    listaLlaves.RemoveAt(i);
-                }
-            }
-
            return mensaje;
         }
         protected void CrearJugador(int x, int y)
@@ -118,7 +109,7 @@ namespace EscapeRoom.NIveles
             nuevopb.Size = new Size(50, 50);
             nuevopb.Location = new Point(x, y);
 
-            this.prisionero = new Prisionero(x, y, 4, nuevopb);
+            this.prisionero = new Prisionero(x, y, 8, nuevopb);
             this.Controls.Add(nuevopb);
             listaPrisioneros.Add(prisionero);
             nuevopb.BringToFront();
@@ -130,7 +121,7 @@ namespace EscapeRoom.NIveles
             pbGuardia.SizeMode = PictureBoxSizeMode.Zoom;
             pbGuardia.BackColor = Color.Transparent; 
             pbGuardia.Size = new Size(50, 50);
-            pbGuardia.Location = new Point(x, y); // Ya no multiplicamos por 50, usamos la coordenada exacta
+            pbGuardia.Location = new Point(x, y); 
 
             Guardia guardia = new Guardia(x, y, 3, pbGuardia, "¡Alto!");
             this.Controls.Add(pbGuardia);
@@ -174,6 +165,7 @@ namespace EscapeRoom.NIveles
                 {
                     puertaActual.EstaAbierta = true;
                     puertaActual.Imagen.Bounds = Rectangle.Empty;
+                    puertaActual.Imagen.Visible = false;
                     this.NivelSuperado = true;
 
                     lblDialogo.Text = Traductor.Obtener("mensajes_juego.terminal_seguridad.puerta_codigo_aceptado");

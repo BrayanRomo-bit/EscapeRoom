@@ -1,4 +1,6 @@
-﻿using EscapeRoom.NIveles;
+﻿using EscapeRoom.Entidades;
+using EscapeRoom.NIveles;
+using EscapeRoom.Objetos;
 using EscapeRoom.Persistencia;
 using EscapeRoom.Personajes;
 using System;
@@ -22,7 +24,7 @@ namespace EscapeRoom
         NivelBase nivel;
         Prisionero prisionero;
         private List<Button> botonesNavegacion;
-
+        private int contadorFrames = 0;
         private int indiceSeleccionado = 0;
         public event EventHandler SaliraMenu;
 
@@ -80,7 +82,6 @@ namespace EscapeRoom
                 ResaltarBotonActual();
                 return true;
             }
-            // Modificación: Ahora se usa la tecla E para hacer clic en el menú
             else if (keyData == Keys.E)
             {
                 botonesNavegacion[indiceSeleccionado].PerformClick();
@@ -103,6 +104,7 @@ namespace EscapeRoom
             btncargar.Text = Traductor.Obtener("pantallas.UCPantallaJuego.botones.btncargar");
             btnInventario.Text = Traductor.Obtener("pantallas.UCPantallaJuego.botones.btnInventario");
             btnSaliraMenu.Text = Traductor.Obtener("pantallas.UCPantallaJuego.botones.btnSaliraMenu");
+            btnSalirVictoria.Text = Traductor.Obtener("pantallas.UCPantallaVictoria.botones.btnSalirVictoria");
         }
 
         private void btnPausaJuego_Click(object sender, EventArgs e)
@@ -148,10 +150,14 @@ namespace EscapeRoom
             }
 
             string codigoGenerado = "";
-            var puertaConCodigo = nivel.Puertas.FirstOrDefault(p => p.RequiereCodigo == true);
-            if (puertaConCodigo != null)
+
+            foreach (var p in nivel.Puertas)
             {
-                codigoGenerado = puertaConCodigo.Codigo;
+                if (p.RequiereCodigo == true)
+                {
+                    codigoGenerado = p.Codigo;
+                    break;
+                }
             }
 
             EstadoJuego miGuardado = new EstadoJuego
@@ -164,7 +170,8 @@ namespace EscapeRoom
                 IdsPuertasAbiertas = puertasGuardar,
                 idioma = Traductor.IdiomaActual,
                 InventarioPrisionero = this.prisionero.Inventario,
-                CodigoPuertaFinal = codigoGenerado
+                CodigoPuertaFinal = codigoGenerado,
+                PuntajePrisionero = this.prisionero.Puntaje,
             };
 
             Guardar.Guardado(miGuardado, nombre);
@@ -193,46 +200,10 @@ namespace EscapeRoom
             prisioneroActual.X = guardado.PrisioneroX;
             prisioneroActual.Y = guardado.PrisioneroY;
             prisioneroActual.Imagen.Location = new Point(prisioneroActual.X, prisioneroActual.Y);
+            this.prisionero.Puntaje = guardado.PuntajePrisionero;
 
-            if (guardado.InventarioPrisionero != null) prisioneroActual.Inventario = guardado.InventarioPrisionero;
+            SincronizarNivelCargado(guardado);
 
-            if (!string.IsNullOrEmpty(guardado.CodigoPuertaFinal))
-            {
-                var puertaSalida = nivel.Puertas.FirstOrDefault(p => p.RequiereCodigo == true);
-                if (puertaSalida != null)
-                {
-                    puertaSalida.Codigo = guardado.CodigoPuertaFinal;
-                }
-                string cod = guardado.CodigoPuertaFinal;
-                if (cod.Length == 3 && nivel.EsconditeCod != null)
-                {
-                    foreach (var cofre in nivel.EsconditeCod)
-                    {
-                        if (cofre.ObjetoOculto != null)
-                        {
-                            if (cofre.ObjetoOculto.Id == "nota1")
-                                cofre.ObjetoOculto.Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota1", cod[0].ToString());
-                            else if (cofre.ObjetoOculto.Id == "nota2")
-                                cofre.ObjetoOculto.Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota2", cod[1].ToString());
-                            else if (cofre.ObjetoOculto.Id == "nota3")
-                                cofre.ObjetoOculto.Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota3", cod[2].ToString());
-                        }
-                    }
-                }
-            }
-
-            if (guardado.IdsPuertasAbiertas != null)
-            {
-                foreach (var idPuerta in guardado.IdsPuertasAbiertas)
-                {
-                    var p = nivel.Puertas.FirstOrDefault(x => x.Id == idPuerta);
-                    if (p != null)
-                    {
-                        p.EstaAbierta = true;
-                        if (p.Imagen != null) p.Imagen.Bounds = Rectangle.Empty;
-                    }
-                }
-            }
             MessageBox.Show(Traductor.Obtener("pantallas.UCPantallaJuego.messageboxes.punto_de_control_cargado"));
             PanelMenuJuego.Visible = false;
             timerjuego.Start();
@@ -241,9 +212,11 @@ namespace EscapeRoom
 
         private void btnInventario_Click(object sender, EventArgs e)
         {
-            Prisionero goku = nivel.Prisioneros[0];
-            string textoMochila = goku.ObtenerTextoInventario();
-            MessageBox.Show(textoMochila, Traductor.Obtener("pantallas.UCPantallaJuego.messageboxes.titulo_inventario"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Prisionero prisionero = nivel.Prisioneros[0];
+            string textoMochila = prisionero.ObtenerTextoInventario();
+            RefrescarInventario();
+            pnlInventario.Visible = true;
+            pnlInventario.BringToFront();
             this.Focus();
         }
 
@@ -254,16 +227,48 @@ namespace EscapeRoom
 
         private void timerjuego_Tick(object sender, EventArgs e)
         {
-            if (nivel == null) return;
-
+            contadorFrames++;
+            if (contadorFrames >= CONSTANTES.Motor.FRAMES_REDUCCION_PUNTOS)
+            {
+                contadorFrames = 0;
+                if (prisionero.Puntaje > 0 && nivel.EstaEnCinematica == false)
+                {
+                    prisionero.Puntaje -= CONSTANTES.Puntaje.PENALIZACION_TIEMPO;
+                }
+            }
             if (nivel.EstaEnCinematica && nivel.miAutobus != null)
             {
+                nivel.miAutobus.Imagen.BringToFront();
                 nivel.miAutobus.Imagen.Left += 10;
-                if (nivel.miAutobus.Imagen.Left > this.Width)
+                if (nivel.miAutobus.Imagen.Left > Width)
                 {
                     timerjuego.Stop();
-                    MessageBox.Show(Traductor.Obtener("pantallas.UCPantallaJuego.messageboxes.escape_exitoso"));
-                    SaliraMenu?.Invoke(this, EventArgs.Empty);
+                    int misPuntos = prisionero.Puntaje;
+                    int recordViejo = Guardar.ObtenerRecords();
+
+                    bool esNuevoRecord = misPuntos > recordViejo;
+
+                    int recordAMostrar = esNuevoRecord ? misPuntos : recordViejo;
+
+                    string mensajefinal = Traductor.Obtener("pantallas.record.mensaje_victoria", prisionero.Nombre);
+
+                    lblPuntosFinales.Text = Traductor.Obtener("pantallas.record.puntaje_final", misPuntos.ToString());
+                    lblRecord.Text = "Record: " + recordAMostrar.ToString();
+                    lblNuevoRecord.Visible = esNuevoRecord;
+                    lblVictoriaTitulo.Text = mensajefinal;
+
+                    pnlVictoria.BringToFront();
+                    pnlVictoria.Visible = true;
+
+                    if (nivel.LabelDialogo != null)
+                    {
+                        nivel.LabelDialogo.Text = mensajefinal;
+                        nivel.LabelDialogo.Visible = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show(mensajefinal);
+                    }
                 }
                 return;
             }
@@ -272,8 +277,8 @@ namespace EscapeRoom
                 prisionero.EstaLeyendo == false && nivel.miAutobus.YaDioObjeto == true && !nivel.EstaEnCinematica)
             {
                 nivel.EstaEnCinematica = true;
-
                 prisionero.Imagen.Visible = false;
+
 
                 return;
             }
@@ -287,7 +292,6 @@ namespace EscapeRoom
             if (presionaE && !accionBloqueada) { accion = true; accionBloqueada = true; }
             else if (!presionaE) { accion = false; accionBloqueada = false; }
 
-            // Modificación: Ahora solo se usa la tecla Espacio para pausar el juego
             if (GetAsyncKeyState(Keys.Space) < 0)
             {
                 PanelMenuJuego.Visible = true;
@@ -315,6 +319,10 @@ namespace EscapeRoom
             {
                 timerjuego.Stop();
                 MessageBox.Show(Traductor.Obtener("pantallas.UCPantallaJuego.messageboxes.nivel_superado"));
+
+                int puntosRescatados = this.prisionero.Puntaje;
+                string nombreJugador = this.prisionero.Nombre;
+                //List<Objeto> inventarioJugador=this.prisionero.Inventario;
                 PanelJuego.Controls.Clear();
 
                 if (nivel is Nivel1)
@@ -328,17 +336,22 @@ namespace EscapeRoom
                 else
                 {
                     MessageBox.Show(Traductor.Obtener("pantallas.UCPantallaJuego.messageboxes.todos_niveles_superados"));
-                    SaliraMenu?.Invoke(this, EventArgs.Empty);
                     return;
                 }
                 nivel.Dock = DockStyle.Fill;
                 nivel.Reinicio += ReiniciarPorDerrota;
+                nivel.PedirPausa += () => timerjuego.Stop();
+                nivel.PedirReanudar += () => timerjuego.Start();
                 nivel.IniciarNivel();
                 PanelJuego.Controls.Add(nivel);
                 this.prisionero = nivel.Prisioneros[0];
+                this.prisionero.Puntaje = puntosRescatados;
+                this.prisionero.Nombre = nombreJugador;
+                //this.prisionero.Inventario = inventarioJugador;
                 this.Focus();
                 timerjuego.Start();
             }
+            lblPuntaje.Text = Traductor.Obtener("pantallas.UCPantallaJuego.textos.puntos") + ": " + prisionero.Puntaje.ToString();
         }
 
         [DllImport("user32.dll")]
@@ -346,14 +359,22 @@ namespace EscapeRoom
 
         public void ReiniciarPorDerrota()
         {
+            string nombreRescatado = this.prisionero.Nombre;
+            int puntosRescatados = this.prisionero.Puntaje;
+
+            puntosRescatados -= CONSTANTES.Puntaje.PENALIZACION_ATRAPADO;
+            if (puntosRescatados < 0) puntosRescatados = 0;
             PanelJuego.Controls.Clear();
             if (nivel is Nivel1) nivel = new Nivel1();
             else if (nivel is Nivel2) nivel = new Nivel2();
-
             nivel.Reinicio += ReiniciarPorDerrota;
+            nivel.PedirPausa += () => timerjuego.Stop();
+            nivel.PedirReanudar += () => timerjuego.Start();
             PanelJuego.Controls.Add(nivel);
             nivel.IniciarNivel();
             this.prisionero = nivel.Prisioneros[0];
+            this.prisionero.Nombre = nombreRescatado;
+            this.prisionero.Puntaje = puntosRescatados;
             nivel.LabelDialogo?.Hide();
             this.Focus();
         }
@@ -393,21 +414,20 @@ namespace EscapeRoom
             switch (guardado.NivelActual)
             {
                 case 1:
-                    {
-                        nivel = new Nivel1();
-                    }
+                    { nivel = new Nivel1(); }
                     break;
                 case 2:
-                    {
-                        nivel = new Nivel2();
-                    }
+                    { nivel = new Nivel2(); }
                     break;
                 case 3:
-                    {
-                        nivel = new Nivel3();
-                    }
+                    { nivel = new Nivel3(); }
                     break;
             }
+
+            nivel.Reinicio += ReiniciarPorDerrota;
+            nivel.PedirPausa += () => timerjuego.Stop();
+            nivel.PedirReanudar += () => timerjuego.Start();
+
             nivel.Dock = DockStyle.Fill;
             PanelJuego.Controls.Add(nivel);
             nivel.IniciarNivel();
@@ -417,16 +437,31 @@ namespace EscapeRoom
             this.prisionero.X = guardado.PrisioneroX;
             this.prisionero.Y = guardado.PrisioneroY;
             this.prisionero.Imagen.Location = new Point(this.prisionero.X, this.prisionero.Y);
+            this.prisionero.Puntaje = guardado.PuntajePrisionero;
 
+            SincronizarNivelCargado(guardado);
+
+            btnPausaJuego.Visible = true;
+            btnPausaJuego.BringToFront();
+
+            timerjuego.Start();
+            this.Focus();
+        }
+        private void SincronizarNivelCargado(EstadoJuego guardado)
+        {
             if (guardado.InventarioPrisionero != null) this.prisionero.Inventario = guardado.InventarioPrisionero;
 
             if (!string.IsNullOrEmpty(guardado.CodigoPuertaFinal))
             {
-                var puertaSalida = nivel.Puertas.FirstOrDefault(p => p.RequiereCodigo == true);
-                if (puertaSalida != null)
+                foreach (var p in nivel.Puertas)
                 {
-                    puertaSalida.Codigo = guardado.CodigoPuertaFinal;
+                    if (p.RequiereCodigo == true)
+                    {
+                        p.Codigo = guardado.CodigoPuertaFinal;
+                        break;
+                    }
                 }
+
                 string cod = guardado.CodigoPuertaFinal;
                 if (cod.Length == 3 && nivel.EsconditeCod != null)
                 {
@@ -434,42 +469,128 @@ namespace EscapeRoom
                     {
                         if (cofre.ObjetoOculto != null)
                         {
-                            if (cofre.ObjetoOculto.Id == "nota1")
-                                cofre.ObjetoOculto.Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota1", cod[0].ToString());
-                            else if (cofre.ObjetoOculto.Id == "nota2")
-                                cofre.ObjetoOculto.Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota2", cod[1].ToString());
-                            else if (cofre.ObjetoOculto.Id == "nota3")
-                                cofre.ObjetoOculto.Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota3", cod[2].ToString());
+                            if (cofre.ObjetoOculto.Id == "nota1") cofre.ObjetoOculto.Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota1", cod[0].ToString());
+                            else if (cofre.ObjetoOculto.Id == "nota2") cofre.ObjetoOculto.Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota2", cod[1].ToString());
+                            else if (cofre.ObjetoOculto.Id == "nota3") cofre.ObjetoOculto.Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota3", cod[2].ToString());
+                        }
+                    }
+                }
+            }
+            if (guardado.IdsPuertasAbiertas != null)
+            {
+                foreach (string idPuerta in guardado.IdsPuertasAbiertas)
+                {
+                    foreach (var p in nivel.Puertas)
+                    {
+                        if (p.Id == idPuerta)
+                        {
+                            p.EstaAbierta = true;
+                            if (p.Imagen != null) p.Imagen.Bounds = Rectangle.Empty;
+                            break;
                         }
                     }
                 }
             }
 
-            if (guardado.IdsPuertasAbiertas != null)
+            List<Escondite> todosLosEscondites = new List<Escondite>();
+            if (nivel.Escondites != null) todosLosEscondites.AddRange(nivel.Escondites);
+            if (nivel.Escondites != null) todosLosEscondites.AddRange(nivel.EsconditeCod);
+
+            foreach (var escondite in todosLosEscondites)
             {
-                foreach (var idPuerta in guardado.IdsPuertasAbiertas)
+                if (escondite.ObjetoOculto != null)
                 {
-                    var p = nivel.Puertas.FirstOrDefault(x => x.Id == idPuerta);
-                    if (p != null)
+                    bool yaloTengo = false;
+
+                    if (this.prisionero.Inventario != null)
                     {
-                        p.EstaAbierta = true;
-                        if (p.Imagen != null) p.Imagen.Bounds = Rectangle.Empty;
+                        foreach (var obj in this.prisionero.Inventario)
+                        {
+                            if (obj.Id == escondite.ObjetoOculto.Id) { yaloTengo = true; break; }
+                        }
+                    }
+                    if (yaloTengo == false && guardado.IdsPuertasAbiertas != null)
+                    {
+                        foreach (var idPuerta in guardado.IdsPuertasAbiertas)
+                        {
+                            if (idPuerta == escondite.ObjetoOculto.Id) { yaloTengo = true; break; }
+                        }
+                    }
+
+                    if (yaloTengo == false && guardado.IdsLlavesRecogidas != null)
+                    {
+                        foreach (var idHistorial in guardado.IdsLlavesRecogidas)
+                        {
+                            if (idHistorial == escondite.ObjetoOculto.Id) { yaloTengo = true; break; }
+                        }
+                    }
+                    if (yaloTengo == true)
+                    {
+                        escondite.YaRevisado = true;
+                        escondite.ObjetoOculto.Recogido = true;
                     }
                 }
             }
-            btnPausaJuego.Visible = true;
-            btnPausaJuego.BringToFront();
-
-            timerjuego.Start();
-            this.Focus();
         }
+        public void RefrescarInventario()
+        {
+            flpItems.Visible = true;
+            flpItems.Controls.Clear();
 
+            foreach (var item in prisionero.Inventario)
+            {
+                item.CargarImagen();
+                PictureBox pbItem = new PictureBox();
+                pbItem.Size = new Size(64, 64);
+                pbItem.SizeMode = PictureBoxSizeMode.Zoom;
+
+                if (item.IconoInventario != null)
+                {
+                    pbItem.Image = item.IconoInventario;
+                }
+                else
+                {
+                    pbItem.BackColor = Color.Red;
+                }
+
+
+                ToolTip toolTip = new ToolTip();
+                toolTip.SetToolTip(pbItem, item.Descripcion);
+
+                flpItems.Controls.Add(pbItem);
+            }
+        }
         private void PanelJuego_Paint(object sender, PaintEventArgs e)
         {
         }
 
         private void PanelMenuJuego_Paint(object sender, PaintEventArgs e)
         {
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            pnlInventario.Visible = false;
+        }
+
+        private void btnSalirVictoria_Click(object sender, EventArgs e)
+        {
+            SaliraMenu?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void pnlVictoria_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void pnlVictoria_Paint_1(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void lblVictoriaTitulo_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

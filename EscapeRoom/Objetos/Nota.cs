@@ -15,6 +15,7 @@ namespace EscapeRoom.Objetos
         public Nota(string id, string titulo, string descripcion ) : base(id, descripcion)
         {
             this.Titulo = titulo;
+            this.IconoInventario = Properties.Resources.nota;
         }
 
         public override string ToString()

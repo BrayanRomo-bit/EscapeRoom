@@ -151,9 +151,9 @@ namespace EscapeRoom.NIveles
             string codigoCompleto = $"{codigo1}{codigo2}{codigo3}";
             this.MonitorNivel = new MonitorSeguridad(pbMonitores, codigoCompleto);
 
-            Objeto pistacam = new Objeto { Id = "pistacam", Descripcion = Traductor.Obtener("niveles.Nivel2.pistas_camaras.pistacam", codigo1.ToString()) };
-            Objeto pistacam2 = new Objeto { Id = "pistacam2", Descripcion = Traductor.Obtener("niveles.Nivel2.pistas_camaras.pistacam2", codigo2.ToString()) };
-            Objeto pistacam3 = new Objeto { Id = "pistacam3", Descripcion = Traductor.Obtener("niveles.Nivel2.pistas_camaras.pistacam3", codigo3.ToString()) };
+            Objeto pistacam = new Objeto { Id = "pistacam", Descripcion = Traductor.Obtener("niveles.Nivel2.pistas_camaras.pistacam", codigo1.ToString()), IconoInventario = Properties.Resources.USB };
+            Objeto pistacam2 = new Objeto { Id = "pistacam2", Descripcion = Traductor.Obtener("niveles.Nivel2.pistas_camaras.pistacam2", codigo2.ToString()), IconoInventario = Properties.Resources.USB };
+            Objeto pistacam3 = new Objeto { Id = "pistacam3", Descripcion = Traductor.Obtener("niveles.Nivel2.pistas_camaras.pistacam3", codigo3.ToString()), IconoInventario = Properties.Resources.USB };
 
             List<Objeto> pistasCamaras = new List<Objeto> { pistacam, pistacam2, pistacam3 };
 

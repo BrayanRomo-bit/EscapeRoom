@@ -49,6 +49,9 @@
         "btnInventario": "Mostrar Inventario",
         "btnSaliraMenu": "Salir"
       },
+      "textos": {
+        "puntos": "Puntos"
+      },
       "messageboxes": {
         "juego_guardado": "Juego guardado exitosamente como: {0}",
         "guardado_no_encontrado": "No se encontró el archivo de guardado. Quizás no has guardado aún.",
@@ -60,6 +63,27 @@
         "error_al_cargar": "Hubo un error al cargar el archivo. Volviendo al menú.",
         "escape_exitoso": "¡Has escapado de la prisión! Has ganado."
       }
+    },
+
+    "UCPantallaVictoria": {
+      "descripcion": "Panel de victoria al completar el juego",
+      "titulos": {
+        "lblTitulo": "¡ESCAPASTE!",
+        "lblFelicidades": "¡Felicidades, {0}!",
+        "lblPuntaje": "Puntaje Final: {0}",
+        "lblTiempo": "Tiempo Total: {0}"
+      },
+      "botones": {
+        "btnSalirVictoria": "Volver al Menú Principal",
+        "btnSalirJuego": "Salir del Juego"
+      }
+    },
+
+    "record": {
+      "titulo": "¡NUEVO RÉCORD!",
+      "mensaje_victoria": "¡Felicidades {0}! Has logrado escapar de la prisión de máxima seguridad.",
+      "puntaje_final": "Puntaje Final: {0}",
+      "tiempo_total": "Tiempo Total: {0}"
     }
   },
 
@@ -96,7 +120,7 @@
         "jhon": {
           "nombre": "Jhon",
           "dialogos": [
-            "Jhon: Psst... Mario, acércate rápido.",
+            "Jhon: Psst... {0}, acércate rápido.",
             "Jhon: Los demás escondieron llaves de madera y códigos en sus celdas para escapar.",
             "Jhon: Ahorita todos están en el patio. ¡Es tu única oportunidad!",
             "Jhon: Toma mi llave... ¡y date prisa antes de que te vean los guardias!"
@@ -242,7 +266,7 @@
         "cama": "la Cama",
         "cofre": "el Cofre"
       },
-      "dialogo_planos": "Hay unos planos sobre el escritorio. la llave de salida está restringida y fuertemente oculta en un cuarto vigilado por una cámara."
+      "dialogo_planos": "Hay unos planos sobre el escritorio. La llave de salida está restringida y fuertemente oculta en un cuarto vigilado por una cámara."
     },
 
     "Nivel3": {
@@ -258,8 +282,8 @@
           "tipo": "Autobus",
           "id": 99,
           "dialogos": [
-            "Mario: ¡Oye tú, bájate! (Se escucha un forcejeo intenso...)",
-            "Mario: ¡Toma esto! (El conductor cae desmayado)."
+            "{0}: ¡Oye tú, bájate! (Se escucha un forcejeo intenso...)",
+            "{0}: ¡Toma esto! (El conductor cae desmayado)."
           ]
         }
       }
@@ -281,15 +305,16 @@
       "cofre_ya_revisado": "Ya revisaste {0} y no hay nada más aquí.",
       "cofre_encontro_algo": "¡Abres {0} y encuentras algo! Recibes: {1}",
       "cofre_vacio": "Abres {0}... pero solo hay polvo y telarañas.",
-      "puerta_final_abierta": "¡Has abierto la puerta final con: Llave {0}! ¡Felicidades, has escapado!",
+      "puerta_final_abierta": "¡Has abierto la puerta final con: Llave {0}!",
       "puerta_abierta": "Has abierto la puerta con: Llave {0}",
-      "puerta_necesita_llave": "Necesitas: Llave{0} para abrir esta puerta.",
+      "puerta_necesita_llave": "Necesitas: Llave {0} para abrir esta puerta.",
       "llave_recogida": "Has recogido: Llave {0}",
       "dialogo_guardia": "Guardia: {0}",
       "camara_detectada": "¡Una cámara de seguridad te ha detectado!",
       "monitor_ya_desactivado": "El monitor muestra una imagen borrosa... parece que ya lo desactivaste.",
       "inventario_vacio": "Tu mochila está vacía.",
-      "inventario_encabezado": "Llevas contigo:\n\n"
+      "inventario_encabezado": "Llevas contigo:\n\n",
+      "dialogo_autobus": "{0}: ¡Oye tú, bájate! (Se escucha un forcejeo intenso...)\n\n{0}: ¡Toma esto! (El conductor cae desmayado)."
     },
     "terminal_seguridad": {
       "puerta_pin_prompt": "La puerta tiene un teclado electrónico. Ingresa el PIN de 3 dígitos:",
@@ -331,7 +356,9 @@
         "CodigoPuertaFinal": "Código de 3 dígitos para la puerta de salida del nivel",
         "InventarioPrisionero": "Lista de objetos que lleva el jugador",
         "IdsLlavesRecogidas": "IDs de las llaves ya recogidas",
-        "IdsPuertasAbiertas": "IDs de las puertas ya abiertas"
+        "IdsPuertasAbiertas": "IDs de las puertas ya abiertas",
+        "GuardiasX": "Lista de coordenadas en X de los guardias",
+        "GuardiasY": "Lista de coordenadas en Y de los guardias"
       }
     },
     "Puerta": {

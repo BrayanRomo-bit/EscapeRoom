@@ -11,9 +11,14 @@ namespace EscapeRoom.Objetos
     public class Llave : Objeto
     {
         public Llave(): base()
-        { }
+        { 
+            this.IconoInventario = Properties.Resources.llavee;
+        }
         public Llave( string id, string descripcion) : base(id, descripcion)
         {
+            this.Id = id;
+            this.Descripcion = descripcion;
+            this.IconoInventario = Properties.Resources.llavee;
         }
     }
 }

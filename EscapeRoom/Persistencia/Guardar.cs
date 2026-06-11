@@ -37,5 +37,35 @@ namespace EscapeRoom.Persistencia
             string json = File.ReadAllText(ruta);
             return JsonSerializer.Deserialize<EstadoJuego>(json);
         }
+
+        public static int ObtenerRecords()
+        {
+            int recordMaximo = 0;
+            string rutaCarpeta = "Partidas Guardadas";
+            if (Directory.Exists(rutaCarpeta))
+            {
+
+                string[] archivos = Directory.GetFiles(rutaCarpeta, "*.json");
+
+                foreach (string archivo in archivos)
+                {
+                    try
+                    {
+                        string json = File.ReadAllText(archivo);
+                        EstadoJuego estado = JsonSerializer.Deserialize<EstadoJuego>(json);
+
+                        if (estado != null && estado.PuntajePrisionero > recordMaximo) recordMaximo = estado.PuntajePrisionero;
+                    }
+                    catch
+                    {
+                        //decir si hay un archivo corrupto
+                        
+
+                        //System.Diagnostics.Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
+            return recordMaximo;
+        }
     }
 }

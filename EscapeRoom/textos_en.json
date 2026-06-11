@@ -49,6 +49,9 @@
         "btnInventario": "Show Inventory",
         "btnSaliraMenu": "Exit"
       },
+      "textos": {
+        "puntos": "Score"
+      },
       "messageboxes": {
         "juego_guardado": "Game saved successfully as: {0}",
         "guardado_no_encontrado": "Save file not found. You may not have saved yet.",
@@ -60,6 +63,27 @@
         "error_al_cargar": "There was an error loading the file. Returning to menu.",
         "escape_exitoso": "You have escaped from prison! You win."
       }
+    },
+
+    "UCPantallaVictoria": {
+      "descripcion": "Victory panel upon completing the game",
+      "titulos": {
+        "lblTitulo": "ESCAPED!",
+        "lblFelicidades": "Congratulations, {0}!",
+        "lblPuntaje": "Final Score: {0}",
+        "lblTiempo": "Total Time: {0}"
+      },
+      "botones": {
+        "btnSalirVictoria": "Return to Main Menu",
+        "btnSalirJuego": "Exit Game"
+      }
+    },
+
+    "record": {
+      "titulo": "NEW RECORD!",
+      "mensaje_victoria": "Congratulations {0}! You have managed to escape from the maximum-security prison.",
+      "puntaje_final": "Final Score: {0}",
+      "tiempo_total": "Total Time: {0}"
     }
   },
 
@@ -96,7 +120,7 @@
         "jhon": {
           "nombre": "Jhon",
           "dialogos": [
-            "Jhon: Psst... Mario, come here quick.",
+            "Jhon: Psst... {0}, come here quick.",
             "Jhon: The others hid wooden keys and codes in their cells to escape.",
             "Jhon: Everyone's in the yard right now. This is your only chance!",
             "Jhon: Take my key... and hurry before the guards spot you!"
@@ -258,8 +282,8 @@
           "tipo": "Autobus",
           "id": 99,
           "dialogos": [
-            "Mario: Hey you, get out! (Sounds of an intense struggle...)",
-            "Mario: Take this! (The driver falls unconscious)."
+            "{0}: Hey you, get out! (Sounds of an intense struggle...)",
+            "{0}: Take this! (The driver falls unconscious)."
           ]
         }
       }
@@ -289,7 +313,8 @@
       "camara_detectada": "A security camera has spotted you!",
       "monitor_ya_desactivado": "The monitor shows a blurry image... looks like you already disabled it.",
       "inventario_vacio": "Your backpack is empty.",
-      "inventario_encabezado": "You are carrying:\n\n"
+      "inventario_encabezado": "You are carrying:\n\n",
+      "dialogo_autobus": "{0}: Hey you, get out! (Sounds of an intense struggle...)\n\n{0}: Take this! (The driver falls unconscious)."
     },
     "terminal_seguridad": {
       "puerta_pin_prompt": "The door has an electronic keypad. Enter the 3-digit PIN:",
@@ -331,7 +356,9 @@
         "CodigoPuertaFinal": "3-digit code for the level's exit door",
         "InventarioPrisionero": "List of items the player is carrying",
         "IdsLlavesRecogidas": "IDs of keys already picked up",
-        "IdsPuertasAbiertas": "IDs of doors already opened"
+        "IdsPuertasAbiertas": "IDs of doors already opened",
+        "GuardiasX": "List of guards' X coordinates",
+        "GuardiasY": "List of guards' Y coordinates"
       }
     },
     "Puerta": {

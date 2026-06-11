@@ -37,7 +37,6 @@ namespace EscapeRoom
             }
             catch (Exception ex)
             {
-                // Si algo sale mal al leer el JSON, ahora el juego te lo dirá en lugar de callarse
                 MessageBox.Show("Error al leer el archivo JSON: " + ex.Message);
             }
         }
@@ -63,8 +62,6 @@ namespace EscapeRoom
             }
             else
             {
-                // SOLUCIÓN AL BUG: Usar ToString() en lugar de GetString() evita que el programa 
-                // explote cuando el JSON tiene un true, un false o un número.
                 diccionario[prefijoActual] = elemento.ToString();
             }
         }

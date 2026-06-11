@@ -49,13 +49,30 @@ namespace EscapeRoom
             jhon.DialogosPorPasos.Add(Traductor.Obtener("niveles.Nivel1.npcs.jhon.dialogos_2"));
             jhon.DialogosPorPasos.Add(Traductor.Obtener("niveles.Nivel1.npcs.jhon.dialogos_3"));
 
-            Llave llaveJhon = new Llave("llave", Traductor.Obtener("niveles.Nivel1.llaves.llave.descripcion"));
+            Llave llaveJhon = new Llave()
+            {
+                Id = "llave",
+                Descripcion = Traductor.Obtener("niveles.Nivel1.llaves.llave.descripcion"),
+                IconoInventario = Properties.Resources.llavee
+
+            };
             jhon.ObjetoaDar = llaveJhon;
             listaNPCs.Add(jhon);
 
-            Llave llave2 = new Llave("llave2", Traductor.Obtener("niveles.Nivel1.llaves.llave2.descripcion"));
-            Llave llave3 = new Llave("llave3", Traductor.Obtener("niveles.Nivel1.llaves.llave3.descripcion"));
-            Llave llave4 = new Llave("llave4", Traductor.Obtener("niveles.Nivel1.llaves.llave4.descripcion"));
+            Llave llave2 = new Llave()
+            {
+                Id="llave2",
+                Descripcion=Traductor.Obtener("niveles.Nivel1.llaves.llave2.descripcion"),
+                IconoInventario = Properties.Resources.llavee
+            };
+            Llave llave3 = new Llave()
+            {
+                Id = "llave3",
+                Descripcion = Traductor.Obtener("niveles.Nivel1.llaves.llave3.descripcion"),
+                IconoInventario = Properties.Resources.llavee
+            };
+
+            Llave llave4 = new Llave() { Id = "llave4", Descripcion = Traductor.Obtener("niveles.Nivel1.llaves.llave4.descripcion"), IconoInventario = Properties.Resources.llavee };
 
             List<Llave> llavesRestantes = new List<Llave> { llave2, llave3, llave4 };
             List<PictureBox> imagenesCamasRestantes = new List<PictureBox> { pbCama2, pbCama3, pbCama4 };
@@ -125,9 +142,9 @@ namespace EscapeRoom
             salida.EsSalidaFinal = true;
             listaPuertas.Add(salida);
 
-            Objeto pista1 = new Objeto { Id = "nota1", Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota1", digito1) };
-            Objeto pista2 = new Objeto { Id = "nota2", Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota2", digito2) };
-            Objeto pista3 = new Objeto { Id = "nota3", Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota3", digito3) };
+            Objeto pista1 = new Objeto { Id = "nota1", Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota1", digito1) , IconoInventario = Properties.Resources.nota };
+            Objeto pista2 = new Objeto { Id = "nota2", Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota2", digito2), IconoInventario = Properties.Resources.nota };
+            Objeto pista3 = new Objeto { Id = "nota3", Descripcion = Traductor.Obtener("niveles.Nivel1.pistas_codigo.nota3", digito3), IconoInventario = Properties.Resources.nota };
 
             List<Objeto> pistas = new List<Objeto> { pista1, pista2, pista3 };
             Random aleatorio = new Random();

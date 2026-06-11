@@ -17,6 +17,7 @@ namespace EscapeRoom.Persistencia
         public int NivelActual { get; set; }
         public string idioma { get; set; }
         public int Dificultad { get; set; }
+        public int PuntajePrisionero { get; set; }
         public string CodigoPuertaFinal { get; set; }
         public List<Objeto> InventarioPrisionero { get; set; }
         public List<string> IdsLlavesRecogidas { get; set; }

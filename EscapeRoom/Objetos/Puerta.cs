@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EscapeRoom.Entidades;
+using EscapeRoom.Personajes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,45 @@ namespace EscapeRoom.Objetos
             this.Id = id;
             this.Descripcion = descripcion;
             this.Imagen = imagen;
+        }
+
+        public string IntentarAbrir(Prisionero Jugador)
+        {
+            if (this.EstaAbierta) return "";
+
+            if (this.RequiereCodigo) return "PINPAD";
+
+            Objeto llaveUsada=null;
+
+            foreach (Objeto item in Jugador.Inventario)
+            {
+            if (item.Id==this.Id)
+                {
+                    llaveUsada = item;
+                    break;
+                }
+            }
+            if (llaveUsada!=null)
+            {
+                this.EstaAbierta = true;
+                if (this.Imagen != null)
+                {
+                    this.Imagen.Bounds = Rectangle.Empty;
+                    this.Imagen.Visible = false;
+                }
+                Jugador.Inventario.Remove(llaveUsada);
+                Jugador.Puntaje += CONSTANTES.Puntaje.PUNTOS_PUERTA;
+                
+                if (this.EsSalidaFinal)
+                {
+                    return Traductor.Obtener("mensajes_juego.prisionero.puerta_final_abierta", llaveUsada.Descripcion);
+                }
+                else
+                {
+                    return Traductor.Obtener("mensajes_juego.prisionero.puerta_abierta", llaveUsada.Descripcion);
+                }
+            }
+            return Traductor.Obtener("mensajes_juego.prisionero.puerta_necesita_llave", this.Descripcion);
         }
     }
 }
